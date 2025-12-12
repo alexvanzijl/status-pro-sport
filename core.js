@@ -1,5 +1,5 @@
 //CORE
-gsap.registerPlugin(Flip, ScrollTrigger, CustomEase);
+console.log ()"CORE LOADED";
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
