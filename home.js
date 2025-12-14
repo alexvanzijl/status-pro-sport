@@ -111,73 +111,73 @@ function setActiveSlide(newSlide) {
 
 // HERO INTRO
 // Prevent animation glitch on page load
-gsap.set(".website", { autoAlpha: 1 });
-
-let tl_title = gsap.timeline({ paused: true });
-tl_title.from(
-  ".hero",
-  {
-    scale: 0.1,
-    ease: "power3.inOut",
-    duration: 1
-  },
-  ">0.5"
-);
-tl_title.from(
-  ".hero-txt_line",
-  {
-    translateY: "100%",
-    rotationZ: "30deg",
-    stagger: { each: 0.05 },
-    ease: "power3.out",
-    //delay: 0.5,
-    duration: 0.5
-  },
-  1
-);
-tl_title.from(
-  ".hero_section_but",
-  {
-    borderColor: "rgba(0, 0, 0, 0)",
-    duration: 0.5
-  },
-  1.5
-);
-tl_title.from(
-  ".hero_bottom_wrapper",
-  {
-    opacity: "0",
-    duration: 1
-  },
-  1
-);
-tl_title.from(
-  ".hero_bg_img_overlay",
-  {
-    opacity: "0",
-    duration: 1
-  },
-  1
-);
-tl_title.from(
-  ".nav",
-  {
-    opacity: "0",
-    duration: 1
-  },
-  1
-);
-tl_title.from(
-  ".logo_loader_part",
-  {
-    translateY: "100%",
-    stagger: { each: 0.05 },
-    ease: "power3.out",
-    //delay: 0.5,
-    duration: 0.5
-  },
-  1
-);
+//gsap.set(".website", { autoAlpha: 1 });
+//
+//let tl_title = gsap.timeline({ paused: true });
+//tl_title.from(
+//  ".hero",
+//  {
+//    scale: 0.1,
+//    ease: "power3.inOut",
+//    duration: 1
+//  },
+//  ">0.5"
+//);
+//tl_title.from(
+//  ".hero-txt_line",
+//  {
+//    translateY: "100%",
+//    rotationZ: "30deg",
+//    stagger: { each: 0.05 },
+//    ease: "power3.out",
+//    //delay: 0.5,
+//    duration: 0.5
+//  },
+//  1
+//);
+//tl_title.from(
+//  ".hero_section_but",
+//  {
+//    borderColor: "rgba(0, 0, 0, 0)",
+//    duration: 0.5
+//  },
+//  1.5
+//);
+//tl_title.from(
+//  ".hero_bottom_wrapper",
+//  {
+//    opacity: "0",
+//    duration: 1
+//  },
+//  1
+//);
+//tl_title.from(
+//  ".hero_bg_img_overlay",
+//  {
+//    opacity: "0",
+//    duration: 1
+//  },
+//  1
+//);
+//tl_title.from(
+//  ".nav",
+//  {
+//    opacity: "0",
+//    duration: 1
+//  },
+//  1
+//);
+//tl_title.from(
+//  ".logo_loader_part",
+//  {
+//    translateY: "100%",
+//    stagger: { each: 0.05 },
+//    ease: "power3.out",
+//    //delay: 0.5,
+//    duration: 0.5
+//  },
+//  1
+//);
 
 // ABOUT ANIMATIONS
 new SplitType(".about_story_intro", {
