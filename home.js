@@ -202,31 +202,25 @@ ScrollTrigger.create({
 });
 
 // SERVICE VISUAL
-const outer = document.querySelector(".circle:not(.inner)");
-const inner = document.querySelector(".circle.inner");
+document.querySelectorAll(".circle").forEach(circle => {
+  const isInner = circle.classList.contains("inner");
 
-gsap.set([outer, inner], { transformOrigin: "50% 50%" });
+  const duration = isInner ? 45 : 60;
+  const direction = isInner ? -360 : 360;
 
-// Outer clockwise
-gsap.to(outer, {
-  rotation: 360,
-  duration: 60,
-  ease: "none",
-  repeat: -1,
-  onUpdate() {
-    outer.style.setProperty("--rot", `${gsap.getProperty(outer, "rotation")}deg`);
-  }
-});
+  // Ensure clean transform origin
+  gsap.set(circle, { transformOrigin: "50% 50%" });
 
-// Inner counter-clockwise
-gsap.to(inner, {
-  rotation: -360,
-  duration: 45,
-  ease: "none",
-  repeat: -1,
-  onUpdate() {
-    inner.style.setProperty("--rot", `${gsap.getProperty(inner, "rotation")}deg`);
-  }
+  gsap.to(circle, {
+    rotation: direction,
+    duration: duration,
+    ease: "none",
+    repeat: -1,
+    onUpdate: () => {
+      const rot = gsap.getProperty(circle, "rotation");
+      circle.style.setProperty("--circle-rotation", `${rot}deg`);
+    }
+  });
 });
 
 //////////////
