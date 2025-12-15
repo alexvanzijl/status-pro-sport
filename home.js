@@ -202,8 +202,8 @@ ScrollTrigger.create({
 });
 
 // SERVICE VISUAL
-const OUTER_DURATION = 60; // seconds (slow & premium)
-const INNER_DURATION = 45;
+const OUTER_DURATION = 6.0; // seconds (slow & premium)
+const INNER_DURATION = 4.5;
 
 // OUTER CIRCLE — clockwise
 gsap.to(".circle:not(.inner)", {
