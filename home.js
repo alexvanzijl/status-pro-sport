@@ -36,13 +36,14 @@ function initHomeHeroIntro() {
     defaults: {
       ease: 'power3.out',
       duration: 0.8,
-      delay: 3
+      delay: 5
     }
   });
 
   tl.to(words, {
     yPercent: 0,
-    stagger: 0.06
+    stagger: 0.06,
+    delay: 5
   });
 
   // Cleanup (optional but recommended)
