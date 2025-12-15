@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED V1.2');
+console.log ('CORE LOADED V1.3');
 
 ///////////////////
 // SMOOTH SCROLL //
@@ -23,6 +23,7 @@ ScrollSmoother.create({
 ///////////////////
 
 function initPageLoader() {
+    console.log ('LOADING');
   const loader = document.querySelector('.loader_container');
   const logo = document.querySelector('.loader_logo');
 
