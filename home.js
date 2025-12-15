@@ -204,27 +204,26 @@ ScrollTrigger.create({
 // SERVICE VISUAL
 gsap.utils.toArray(".circle").forEach(circle => {
   const isInner = circle.classList.contains("inner");
-  const duration = isInner ? 45 : 60;
-  const direction = isInner ? -360 : 360;
-  const iconDirection = -direction;
 
-  // Rotate the circle
+  const speed = isInner ? 40 : 60;
+  const direction = isInner ? -360 : 360;
+
+  // Rotate the orbit itself
   gsap.to(circle, {
     rotation: direction,
-    duration,
+    duration: speed,
     ease: "none",
     repeat: -1,
     transformOrigin: "50% 50%"
   });
 
-  // Counter-rotate icons inside THIS circle
-  gsap.to(circle.querySelectorAll(".dot_icon"), {
-    rotation: iconDirection,
-    duration,
+  // Counter-rotate ALL dot_orbits
+  gsap.to(circle.querySelectorAll(".dot_orbit"), {
+    rotation: -direction,
+    duration: speed,
     ease: "none",
     repeat: -1,
-    transformOrigin: "50% 50%",
-    overwrite: false   // 🔑 CRITICAL
+    transformOrigin: "50% 50%"
   });
 });
 
