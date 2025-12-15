@@ -59,14 +59,6 @@ function setActiveSlide(newSlide) {
   updateHeroContent();
 }
 
-ScrollTrigger.create({
-  trigger: '.hero',
-  start: 'top top',
-  end: 'bottom top',
-  pin: '.hero_bg_img',
-  pinSpacing: false
-});
-
 // TIMER //
 
 const slides = Array.from(
