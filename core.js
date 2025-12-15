@@ -87,6 +87,10 @@ function initPageLoader() {
     window.dispatchEvent(new Event('loaderComplete'));
   });
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  initPageLoader();
+});
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
