@@ -14,9 +14,9 @@ ScrollSmoother.create({
 });
 
 // Disable on mobile
-if (!ScrollTrigger.isTouch) {
-  ScrollSmoother.create({ ... });
-}
+ScrollSmoother.create({
+  smooth: window.innerWidth > 991 ? 1.1 : 0,
+});
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
