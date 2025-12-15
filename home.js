@@ -182,12 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // SERVICE BLOCKS
 
 ScrollTrigger.create({
-  trigger: '.service_block_360_wrapper',
-  start: 'top 32px',
+  trigger: '.why_services', // full-width section
+  start: 'top top+=32',
   end: 'bottom bottom',
   pin: '.service_block_360',
-  pinSpacing: false
+  pinSpacing: false,
 });
+
 
 //////////////
 //// LOADER //
