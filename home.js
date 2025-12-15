@@ -202,7 +202,10 @@ ScrollTrigger.create({
 });
 
 // SERVICE VISUAL
-gsap.set(".circle", { transformOrigin: "50% 50%" });
+gsap.set(".circle", {
+  transformOrigin: "50% 50%",
+  overwrite: false   // ⬅️ VERY important
+});
 
 // Outer clockwise
 gsap.to(".circle.outer", {
