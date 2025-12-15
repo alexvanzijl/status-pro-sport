@@ -185,8 +185,12 @@ ScrollTrigger.create({
   trigger: '.why_services',
   start: 'top top+=32',
 
-  endTrigger: '.service_block_360',
-  end: 'bottom bottom',
+  end: () => {
+    const section = document.querySelector('.why_services');
+    const block   = document.querySelector('.service_block_360');
+
+    return section.offsetHeight - block.offsetHeight;
+  },
 
   pin: '.service_block_360_pin',
   pinSpacing: false,
