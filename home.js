@@ -202,22 +202,22 @@ ScrollTrigger.create({
 });
 
 // SERVICE VISUAL
-document.querySelectorAll(".circle").forEach(circle => {
-  const isInner = circle.classList.contains("inner");
-  const duration = isInner ? 45 : 60;
-  const direction = isInner ? -360 : 360;
+gsap.set(".circle", { transformOrigin: "50% 50%" });
 
-  gsap.set(circle, { transformOrigin: "50% 50%" });
+// Outer clockwise
+gsap.to(".circle.outer", {
+  rotation: 360,
+  duration: 60,
+  ease: "none",
+  repeat: -1
+});
 
-  gsap.to(circle, {
-    rotation: direction,
-    duration,
-    ease: "none",
-    repeat: -1,
-    onUpdate() {
-      circle.style.setProperty("--rot", `${gsap.getProperty(circle, "rotation")}deg`);
-    }
-  });
+// Inner counter-clockwise
+gsap.to(".circle.inner", {
+  rotation: -360,
+  duration: 45,
+  ease: "none",
+  repeat: -1
 });
 
 //////////////
