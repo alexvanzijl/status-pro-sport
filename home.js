@@ -17,7 +17,7 @@ function updateHeroContent() {
 
   const heroTitle = document.querySelector('.featured-case_title');
   const heroLink  = document.querySelector('.case_timer');
-  const textWrap  = document.querySelector('.case_timer_wrapper');
+  const textWrap  = document.querySelector('.case_timer_text_wrap');
 
   // Capture current layout
   const state = Flip.getState(textWrap);
