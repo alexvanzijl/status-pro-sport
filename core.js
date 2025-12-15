@@ -17,6 +17,75 @@ const smoother = ScrollSmoother.create({
 ScrollSmoother.create({
   smooth: window.innerWidth > 991 ? 1.1 : 0,
 });
+
+///////////////////
+// GLOBAL LOADER //
+///////////////////
+
+function initPageLoader() {
+  const loader = document.querySelector('.loader_container');
+  const logo = document.querySelector('.loader_logo');
+
+  if (!loader || !logo) return;
+
+  // Force show loader immediately
+  gsap.set(loader, {
+    autoAlpha: 1,
+    yPercent: 0
+  });
+
+  // Split text
+  const split = new SplitText(logo, {
+    type: 'words'
+  });
+
+  // Initial state: words 100% below
+  gsap.set(split.words, {
+    yPercent: 100
+  });
+
+  const tl = gsap.timeline({
+    defaults: {
+      ease: 'power3.out'
+    }
+  });
+
+  // IN
+  tl.to(split.words, {
+    yPercent: 0,
+    duration: 0.6,
+    stagger: 0.08
+  });
+
+  // HOLD
+  tl.to({}, { duration: 1 });
+
+  // OUT (words go up)
+  tl.to(split.words, {
+    yPercent: -100,
+    duration: 0.5,
+    stagger: 0.06,
+    ease: 'power3.in'
+  });
+
+  // Loader slides up halfway through word-out
+  tl.to(loader, {
+    yPercent: -100,
+    duration: 0.8,
+    ease: 'power2.inOut'
+  }, '-=0.4');
+
+  // Cleanup + signal
+  tl.add(() => {
+    split.revert();
+
+    // Optional: hide completely after
+    gsap.set(loader, { display: 'none' });
+
+    // Fire global event for page-specific intros
+    window.dispatchEvent(new Event('loaderComplete'));
+  });
+}
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
