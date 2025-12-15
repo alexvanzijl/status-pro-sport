@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ScrollTrigger.create({
   trigger: '.service_block_360_wrapper',
   start: 'top top+=32',
-  end: 'bottom bottom',
+  end: '+=100%',
   pin: '.service_block_360',
   pinSpacing: false,
   markers: true
