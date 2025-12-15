@@ -13,6 +13,10 @@ ScrollSmoother.create({
   normalizeScroll: true
 });
 
+// Disable on mobile
+if (!ScrollTrigger.isTouch) {
+  ScrollSmoother.create({ ... });
+}
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
