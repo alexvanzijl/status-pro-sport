@@ -204,21 +204,21 @@ ScrollTrigger.create({
 // SERVICE VISUAL
 document.querySelectorAll(".circle").forEach(circle => {
   const isInner = circle.classList.contains("inner");
-
   const duration = isInner ? 45 : 60;
   const direction = isInner ? -360 : 360;
 
-  // Ensure clean transform origin
   gsap.set(circle, { transformOrigin: "50% 50%" });
 
   gsap.to(circle, {
     rotation: direction,
-    duration: duration,
+    duration,
     ease: "none",
     repeat: -1,
-    onUpdate: () => {
-      const rot = gsap.getProperty(circle, "rotation");
-      circle.style.setProperty("--circle-rotation", `${rot}deg`);
+    onUpdate() {
+      circle.style.setProperty(
+        "--rot",
+        `${gsap.getProperty(circle, "rotation")}deg`
+      );
     }
   });
 });
