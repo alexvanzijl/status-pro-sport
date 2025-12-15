@@ -183,11 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ScrollTrigger.create({
   trigger: '.why_services',
-  scroller: '#smooth-content',   // 👈 THIS IS THE KEY
   start: 'top top+=32',
   end: '+=100%',
   pin: '.service_block_360',
-  pinSpacing: false
+  pinSpacing: false,
+  markers: true
 });
 
 //////////////
