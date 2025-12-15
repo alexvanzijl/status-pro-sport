@@ -202,29 +202,31 @@ ScrollTrigger.create({
 });
 
 // SERVICE VISUAL
-gsap.utils.toArray(".circle").forEach(circle => {
-  const isInner = circle.classList.contains("inner");
+const outer = document.querySelector(".circle:not(.inner)");
+const inner = document.querySelector(".circle.inner");
 
-  const speed = isInner ? 40 : 60;
-  const direction = isInner ? -360 : 360;
+gsap.set([outer, inner], { transformOrigin: "50% 50%" });
 
-  // Rotate the orbit itself
-  gsap.to(circle, {
-    rotation: direction,
-    duration: speed,
-    ease: "none",
-    repeat: -1,
-    transformOrigin: "50% 50%"
-  });
+// Outer clockwise
+gsap.to(outer, {
+  rotation: 360,
+  duration: 60,
+  ease: "none",
+  repeat: -1,
+  onUpdate() {
+    outer.style.setProperty("--rot", `${gsap.getProperty(outer, "rotation")}deg`);
+  }
+});
 
-  // Counter-rotate ALL dot_orbits
-  gsap.to(circle.querySelectorAll(".dot_orbit"), {
-    rotation: -direction,
-    duration: speed,
-    ease: "none",
-    repeat: -1,
-    transformOrigin: "50% 50%"
-  });
+// Inner counter-clockwise
+gsap.to(inner, {
+  rotation: -360,
+  duration: 45,
+  ease: "none",
+  repeat: -1,
+  onUpdate() {
+    inner.style.setProperty("--rot", `${gsap.getProperty(inner, "rotation")}deg`);
+  }
 });
 
 //////////////
