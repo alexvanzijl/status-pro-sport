@@ -81,7 +81,7 @@ unction initPageLoader() {
     yPercent: -100,
     duration: 1,
     ease: 'power3.in'
-  }, '-=0.9');
+  }, '-=1.5');
 
   // Cleanup + signal
   tl.add(() => {
