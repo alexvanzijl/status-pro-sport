@@ -5,18 +5,18 @@ console.log ('CORE LOADED V1.2');
 // SMOOTH SCROLL //
 ///////////////////
 
-//ScrollSmoother.create({
-//  wrapper: '#smooth-wrapper',
-//  content: '#smooth-content',
-//  smooth: 1.1,
-//  effects: true,
-//  normalizeScroll: true
-//});
-//
-//// Disable on mobile
-//ScrollSmoother.create({
-//  smooth: window.innerWidth > 991 ? 1.1 : 0,
-//});
+ScrollSmoother.create({
+  wrapper: '#smooth-wrapper',
+  content: '#smooth-content',
+  smooth: 1.1,
+  effects: true,
+  normalizeScroll: true
+});
+
+// Disable on mobile
+ScrollSmoother.create({
+  smooth: window.innerWidth > 991 ? 1.1 : 0,
+});
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
