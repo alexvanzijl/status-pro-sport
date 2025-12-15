@@ -178,7 +178,7 @@ function runHeroCycle() {
 // Progress bar fill
 heroTimeline.to(progressBar, {
   width: '100%',
-  duration: 3,
+  duration: 8,
   ease: 'linear'
 });
 
