@@ -202,39 +202,30 @@ ScrollTrigger.create({
 });
 
 // SERVICE VISUAL
-const OUTER_DURATION = 6.0; // seconds (slow & premium)
-const INNER_DURATION = 4.5;
+gsap.utils.toArray(".circle").forEach(circle => {
+  const isInner = circle.classList.contains("inner");
+  const duration = isInner ? 45 : 60;
+  const direction = isInner ? -360 : 360;
+  const iconDirection = -direction;
 
-// OUTER CIRCLE — clockwise
-gsap.to(".circle:not(.inner)", {
-  rotation: 360,
-  duration: OUTER_DURATION,
-  ease: "none",
-  repeat: -1
-});
+  // Rotate the circle
+  gsap.to(circle, {
+    rotation: direction,
+    duration,
+    ease: "none",
+    repeat: -1,
+    transformOrigin: "50% 50%"
+  });
 
-// INNER CIRCLE — counter-clockwise
-gsap.to(".circle.inner", {
-  rotation: -360,
-  duration: INNER_DURATION,
-  ease: "none",
-  repeat: -1
-});
-
-// COUNTER-ROTATE ICONS (outer)
-gsap.to(".circle:not(.inner) .dot_icon", {
-  rotation: -360,
-  duration: OUTER_DURATION,
-  ease: "none",
-  repeat: -1
-});
-
-// COUNTER-ROTATE ICONS (inner)
-gsap.to(".circle.inner .dot_icon", {
-  rotation: 360,
-  duration: INNER_DURATION,
-  ease: "none",
-  repeat: -1
+  // Counter-rotate icons inside THIS circle
+  gsap.to(circle.querySelectorAll(".dot_icon"), {
+    rotation: iconDirection,
+    duration,
+    ease: "none",
+    repeat: -1,
+    transformOrigin: "50% 50%",
+    overwrite: false   // 🔑 CRITICAL
+  });
 });
 
 //////////////
