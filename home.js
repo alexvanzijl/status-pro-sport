@@ -7,7 +7,7 @@ console.log ('HOME LOADED');
 
 function updateHeroContent() {
   const activeSlide = document.querySelector(
-    '.hero_bg_img_list .w-dyn-item.is-active'
+    '.hero_bg_container.w-dyn-item.is-active'
   );
 
   if (!activeSlide) return;
@@ -17,15 +17,27 @@ function updateHeroContent() {
 
   const heroTitle = document.querySelector('.featured-case_title');
   const heroLink  = document.querySelector('.case_timer');
+  const textWrap  = document.querySelector('.case_timer_wrapper');
+
+  // Capture current layout
+  const state = Flip.getState(textWrap);
 
   if (titleEl && heroTitle) {
     heroTitle.textContent = titleEl.textContent;
   }
 
   if (linkEl && heroLink) {
-    heroLink.setAttribute('href', linkEl.getAttribute('href'));
+    heroLink.href = linkEl.getAttribute('href');
   }
+
+  // Animate layout change
+  Flip.from(state, {
+    duration: 0.5,
+    ease: 'power2.out',
+    absolute: true
+  });
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const firstSlide = document.querySelector(
