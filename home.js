@@ -100,11 +100,19 @@ function runHeroCycle() {
 
   heroTimeline.set(progressBar, { width: '0%' });
 
-  heroTimeline.to(progressBar, {
-    width: '100%',
-    duration: 3,
-    ease: 'linear'
-  });
+// Progress bar fill
+heroTimeline.to(progressBar, {
+  width: '100%',
+  duration: 3,
+  ease: 'linear'
+});
+
+// Smooth reset before transition
+heroTimeline.to(progressBar, {
+  width: '0%',
+  duration: 0.6,
+  ease: 'power2.out'
+}, '+=0.1');
 
   heroTimeline.to([currentSlide, heroTitle], {
     opacity: 0,
