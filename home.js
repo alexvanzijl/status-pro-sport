@@ -198,7 +198,7 @@ ScrollTrigger.create({
   pin: '.service_block_360_pin',
   pinSpacing: false,
   anticipatePin: 1,
-  markers: true
+  //markers: true
 });
 
 //////////////
