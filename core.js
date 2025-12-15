@@ -22,12 +22,18 @@ ScrollSmoother.create({
 // GLOBAL LOADER //
 ///////////////////
 
-function initPageLoader() {
-    console.log ('LOADING');
+unction initPageLoader() {
   const loader = document.querySelector('.loader_container');
   const logo = document.querySelector('.loader_logo');
 
   if (!loader || !logo) return;
+
+  // Hard reset loader visibility
+  gsap.set(loader, {
+    autoAlpha: 1,        // opacity + visibility
+    pointerEvents: 'all',
+    yPercent: 0
+  });
 
   // Force show loader immediately
   gsap.set(loader, {
@@ -79,14 +85,15 @@ function initPageLoader() {
 
   // Cleanup + signal
   tl.add(() => {
-    split.revert();
+  split.revert();
 
-    // Optional: hide completely after
-    gsap.set(loader, { display: 'none' });
-
-    // Fire global event for page-specific intros
-    window.dispatchEvent(new Event('loaderComplete'));
+  gsap.set(loader, {
+    autoAlpha: 0,
+    pointerEvents: 'none'
   });
+
+  window.dispatchEvent(new Event('loaderComplete'));
+});
 }
 
 window.addEventListener('DOMContentLoaded', () => {
