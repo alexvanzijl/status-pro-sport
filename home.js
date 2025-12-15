@@ -35,7 +35,8 @@ function initHomeHeroIntro() {
   const tl = gsap.timeline({
     defaults: {
       ease: 'power3.out',
-      duration: 0.8
+      duration: 0.8,
+      delay: 3
     }
   });
 
