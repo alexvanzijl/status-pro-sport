@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // SERVICE BLOCKS
 
 ScrollTrigger.create({
-  trigger: '.service_block_360_wrapper',
+  trigger: '.why_services',
   start: 'top 32px',
   end: 'bottom bottom',
   pin: '.service_block_360',
