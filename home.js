@@ -157,21 +157,21 @@ if (timerWrapper) {
 
 // HERO PARALAX //
 
-//document.querySelectorAll('.hero_bg_container').forEach(container => {
-//  const img = container.querySelector('.hero_bg_img');
-//  if (!img) return;
-//
-//  gsap.to(img, {
-//    yPercent: -20,
-//    ease: 'none',
-//    scrollTrigger: {
-//      trigger: container,
-//      start: 'top top',
-//      end: 'bottom top',
-//      scrub: true
-//    }
-//  });
-//});
+document.querySelectorAll('.hero_bg_container').forEach(container => {
+  const img = container.querySelector('.hero_bg_img');
+  if (!img) return;
+
+  gsap.to(img, {
+    yPercent: -20,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: container,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   slides[0].classList.add('is-active');
