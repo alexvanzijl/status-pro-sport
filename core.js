@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED');
+console.log ('CORE LOADED V1.1');
 
 ///////////////////
 // SMOOTH SCROLL //
