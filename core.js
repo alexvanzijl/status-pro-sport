@@ -60,7 +60,7 @@ function initPageLoader() {
   });
 
   // HOLD
-  tl.to({}, { duration: 1 });
+  tl.to({}, { duration: .5 });
 
   // OUT (words go up)
   tl.to(split.words, {
@@ -73,9 +73,9 @@ function initPageLoader() {
   // Loader slides up halfway through word-out
   tl.to(loader, {
     yPercent: -100,
-    duration: 0.8,
+    duration: 1,
     ease: 'power3.inOut'
-  }, '-=0.5');
+  }, '-=0.75');
 
   // Cleanup + signal
   tl.add(() => {
