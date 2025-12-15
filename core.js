@@ -5,7 +5,7 @@ console.log ('CORE LOADED V1.2');
 // SMOOTH SCROLL //
 ///////////////////
 
-ScrollSmoother.create({
+const smoother = ScrollSmoother.create({
   wrapper: '#smooth-wrapper',
   content: '#smooth-content',
   smooth: 1.1,
