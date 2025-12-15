@@ -189,7 +189,7 @@ ScrollTrigger.create({
   end: () => {
     const grid  = document.querySelector('.service_block_grid');
     const block = document.querySelector('.service_block_360_pin');
-    const topOffset = 32;
+    const topOffset = 0;
 
     const dist = grid.offsetHeight - block.offsetHeight - topOffset;
     return `+=${Math.max(0, dist)}`;
