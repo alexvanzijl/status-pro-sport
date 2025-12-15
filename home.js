@@ -180,20 +180,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // SERVICE BLOCKS
+window.addEventListener('load', () => ScrollTrigger.refresh());
 
 ScrollTrigger.create({
   trigger: '.why_services',
   start: 'top top+=32',
 
   end: () => {
-    const section = document.querySelector('.why_services');
-    const block   = document.querySelector('.service_block_360');
+    const grid  = document.querySelector('.service_block_grid');
+    const block = document.querySelector('.service_block_360_pin');
+    const topOffset = 32;
 
-    return section.offsetHeight - block.offsetHeight;
+    const dist = grid.offsetHeight - block.offsetHeight - topOffset;
+    return `+=${Math.max(0, dist)}`;
   },
 
   pin: '.service_block_360_pin',
   pinSpacing: false,
+  anticipatePin: 1,
   markers: true
 });
 
