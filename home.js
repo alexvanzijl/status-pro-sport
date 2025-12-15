@@ -184,8 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
 ScrollTrigger.create({
   trigger: '.why_services',
   start: 'top top+=32',
-  end: '+=100%',
-  pin: '.service_block_360',
+
+  endTrigger: '.service_block_360',
+  end: 'bottom bottom',
+
+  pin: '.service_block_360_pin',
   pinSpacing: false,
   markers: true
 });
