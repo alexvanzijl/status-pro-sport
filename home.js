@@ -1,61 +1,80 @@
 //HOME
 console.log ('HOME LOADED V1');
 
-///////////////
-// INTRO ANI //
-///////////////
-function initHomeHeroIntro() {
+////////////////////
+// HERO INTRO ANI //
+////////////////////
+
+// Shared state (important)
+let heroSplits = [];
+let heroWords = [];
+
+/**
+ * Prepare hero titles:
+ * - Split text
+ * - Set initial hidden state
+ * - Run ASAP (before loader finishes)
+ */
+function prepareHomeHeroIntro() {
   const smallTitles = document.querySelectorAll('.hero_titles_small');
   const largeTitles = document.querySelectorAll('.hero_titles_large');
 
   if (!smallTitles.length && !largeTitles.length) return;
 
-  const splits = [];
+  heroSplits = [];
+  heroWords = [];
 
   smallTitles.forEach(el => {
-    splits.push(
-      new SplitText(el, { type: 'words' })
-    );
+    const split = new SplitText(el, { type: 'words' });
+    heroSplits.push(split);
+    heroWords.push(...split.words);
   });
 
   largeTitles.forEach(el => {
-    splits.push(
-      new SplitText(el, { type: 'words' })
-    );
+    const split = new SplitText(el, { type: 'words' });
+    heroSplits.push(split);
+    heroWords.push(...split.words);
   });
 
-  // Collect all words
-  const words = splits.flatMap(split => split.words);
-
-  // Initial state
-  gsap.set(words, {
+  // 🔑 Initial hidden state (NO animation yet)
+  gsap.set(heroWords, {
     yPercent: 100
   });
+}
+
+/**
+ * Play hero intro animation
+ * - Triggered after loader completes
+ */
+function playHomeHeroIntro() {
+  if (!heroWords.length) return;
 
   const tl = gsap.timeline({
     defaults: {
       ease: 'power3.out',
-      duration: 0.8,
-      delay: 5
+      duration: 0.8
     }
   });
 
-  tl.to(words, {
+  tl.to(heroWords, {
     yPercent: 0,
-    stagger: 0.06,
-    delay: 5
+    stagger: 0.06
   });
 
-  // Cleanup (optional but recommended)
+  // Cleanup: revert DOM back to normal
   tl.add(() => {
-    splits.forEach(split => split.revert());
+    heroSplits.forEach(split => split.revert());
   });
 }
 
-// Listen for loader completion
+// 1️⃣ Prepare immediately (critical to avoid FOUC)
+prepareHomeHeroIntro();
+
+// 2️⃣ Play after loader finishes
 window.addEventListener('loaderComplete', () => {
-  initHomeHeroIntro();
+  playHomeHeroIntro();
 });
+
 
 ///////////////////
 // FEATURED CASE //
