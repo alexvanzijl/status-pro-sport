@@ -22,7 +22,7 @@ ScrollSmoother.create({
 // GLOBAL LOADER //
 ///////////////////
 
-unction initPageLoader() {
+function initPageLoader() {
   const loader = document.querySelector('.loader_container');
   const logo = document.querySelector('.loader_logo');
 
