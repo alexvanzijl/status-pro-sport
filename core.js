@@ -54,8 +54,9 @@ function initPageLoader() {
   // IN
   tl.to(split.words, {
     yPercent: 0,
-    duration: 0.6,
-    stagger: 0.08
+    duration: 1,
+    stagger: 0.15,
+    delay: 1
   });
 
   // HOLD
@@ -65,7 +66,7 @@ function initPageLoader() {
   tl.to(split.words, {
     yPercent: -100,
     duration: 0.5,
-    stagger: 0.06,
+    stagger: 0.15,
     ease: 'power3.in'
   });
 
@@ -73,8 +74,8 @@ function initPageLoader() {
   tl.to(loader, {
     yPercent: -100,
     duration: 0.8,
-    ease: 'power2.inOut'
-  }, '-=0.4');
+    ease: 'power3.inOut'
+  }, '-=0.5');
 
   // Cleanup + signal
   tl.add(() => {
