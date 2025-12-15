@@ -59,6 +59,7 @@ const heroLink  = document.querySelector('.case_timer');
 const progressBar = document.querySelector('.case_timer_progress');
 
 let currentIndex = 0;
+let heroTimeline;
 
 function getNextIndex() {
   return (currentIndex + 1) % slides.length;
@@ -78,55 +79,60 @@ function runHeroCycle() {
   const nextIndex    = getNextIndex();
   const nextSlide    = slides[nextIndex];
 
-  const tl = gsap.timeline({
+  heroTimeline = gsap.timeline({
     onComplete: () => {
       currentIndex = nextIndex;
       runHeroCycle();
     }
   });
 
-  // Reset progress bar
-  tl.set(progressBar, { width: '0%' });
+  heroTimeline.set(progressBar, { width: '0%' });
 
-  // Progress bar fill (3 seconds)
-  tl.to(progressBar, {
+  heroTimeline.to(progressBar, {
     width: '100%',
     duration: 3,
     ease: 'linear'
   });
 
-  // Fade out current visuals
-  tl.to([currentSlide, heroTitle], {
+  heroTimeline.to([currentSlide, heroTitle], {
     opacity: 0,
     duration: 0.6,
     ease: 'power2.inOut'
   });
 
-  // Switch content & active slide
-  tl.call(() => {
+  heroTimeline.call(() => {
     activateSlide(nextIndex);
   });
 
-  // Prepare next background
-  tl.set(nextSlide, {
+  heroTimeline.set(nextSlide, {
     opacity: 0,
     scale: 1.2
   });
 
-  // Fade + scale in new background
-  tl.to(nextSlide, {
+  heroTimeline.to(nextSlide, {
     opacity: 1,
     scale: 1,
     duration: 1,
     ease: 'power3.out'
-  }, '<'); // start immediately
+  }, '<');
 
-  // Fade in new title
-  tl.to(heroTitle, {
+  heroTimeline.to(heroTitle, {
     opacity: 1,
     duration: 0.6,
     ease: 'power2.out'
   }, '-=0.4');
+}
+
+const timerWrapper = document.querySelector('.case_timer_wrapper');
+
+if (timerWrapper) {
+  timerWrapper.addEventListener('mouseenter', () => {
+    heroTimeline?.pause();
+  });
+
+  timerWrapper.addEventListener('mouseleave', () => {
+    heroTimeline?.resume();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
