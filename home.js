@@ -1,5 +1,5 @@
 //HOME
-console.log ('HOME LOADED');
+console.log ('HOME LOADED V1');
 
 ///////////////////
 // FEATURED CASE //
@@ -58,6 +58,14 @@ function setActiveSlide(newSlide) {
   newSlide.classList.add('is-active');
   updateHeroContent();
 }
+
+ScrollTrigger.create({
+  trigger: '.hero',
+  start: 'top top',
+  end: 'bottom top',
+  pin: '.hero_bg_img',
+  pinSpacing: false
+});
 
 // TIMER //
 
@@ -154,6 +162,24 @@ if (timerWrapper) {
     heroTimeline?.resume();
   });
 }
+
+// HERO PARALAX //
+
+//document.querySelectorAll('.hero_bg_container').forEach(container => {
+//  const img = container.querySelector('.hero_bg_img');
+//  if (!img) return;
+//
+//  gsap.to(img, {
+//    yPercent: -20,
+//    ease: 'none',
+//    scrollTrigger: {
+//      trigger: container,
+//      start: 'top top',
+//      end: 'bottom top',
+//      scrub: true
+//    }
+//  });
+//});
 
 document.addEventListener('DOMContentLoaded', () => {
   slides[0].classList.add('is-active');
