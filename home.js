@@ -52,6 +52,11 @@ function initHomeHeroIntro() {
   });
 }
 
+// Listen for loader completion
+window.addEventListener('loaderComplete', () => {
+  initHomeHeroIntro();
+});
+
 ///////////////////
 // FEATURED CASE //
 ///////////////////
