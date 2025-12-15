@@ -47,6 +47,94 @@ function setActiveSlide(newSlide) {
   updateHeroContent();
 }
 
+// TIMER //
+
+const slides = Array.from(
+  document.querySelectorAll('.hero_bg_container.w-dyn-item')
+);
+
+const heroTitle = document.querySelector('.featured-case_title');
+const heroLink  = document.querySelector('.case_timer');
+
+const progressBar = document.querySelector('.case_timer_progress');
+
+let currentIndex = 0;
+
+function getNextIndex() {
+  return (currentIndex + 1) % slides.length;
+}
+
+function activateSlide(index) {
+  slides.forEach(slide => slide.classList.remove('is-active'));
+
+  const newSlide = slides[index];
+  newSlide.classList.add('is-active');
+
+  updateHeroContent(); // your existing CMS sync function
+}
+
+function runHeroCycle() {
+  const currentSlide = slides[currentIndex];
+  const nextIndex    = getNextIndex();
+  const nextSlide    = slides[nextIndex];
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      currentIndex = nextIndex;
+      runHeroCycle();
+    }
+  });
+
+  // Reset progress bar
+  tl.set(progressBar, { width: '0%' });
+
+  // Progress bar fill (3 seconds)
+  tl.to(progressBar, {
+    width: '100%',
+    duration: 3,
+    ease: 'linear'
+  });
+
+  // Fade out current visuals
+  tl.to([currentSlide, heroTitle], {
+    opacity: 0,
+    duration: 0.6,
+    ease: 'power2.inOut'
+  });
+
+  // Switch content & active slide
+  tl.call(() => {
+    activateSlide(nextIndex);
+  });
+
+  // Prepare next background
+  tl.set(nextSlide, {
+    opacity: 0,
+    scale: 1.2
+  });
+
+  // Fade + scale in new background
+  tl.to(nextSlide, {
+    opacity: 1,
+    scale: 1,
+    duration: 1,
+    ease: 'power3.out'
+  }, '<'); // start immediately
+
+  // Fade in new title
+  tl.to(heroTitle, {
+    opacity: 1,
+    duration: 0.6,
+    ease: 'power2.out'
+  }, '-=0.4');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  slides[0].classList.add('is-active');
+  updateHeroContent();
+  runHeroCycle();
+});
+
 //////////////
 //// LOADER //
 //////////////
