@@ -201,6 +201,42 @@ ScrollTrigger.create({
   //markers: true
 });
 
+// SERVICE VISUAL
+const OUTER_DURATION = 60; // seconds (slow & premium)
+const INNER_DURATION = 45;
+
+// OUTER CIRCLE — clockwise
+gsap.to(".circle:not(.inner)", {
+  rotation: 360,
+  duration: OUTER_DURATION,
+  ease: "none",
+  repeat: -1
+});
+
+// INNER CIRCLE — counter-clockwise
+gsap.to(".circle.inner", {
+  rotation: -360,
+  duration: INNER_DURATION,
+  ease: "none",
+  repeat: -1
+});
+
+// COUNTER-ROTATE ICONS (outer)
+gsap.to(".circle:not(.inner) .dot_icon", {
+  rotation: -360,
+  duration: OUTER_DURATION,
+  ease: "none",
+  repeat: -1
+});
+
+// COUNTER-ROTATE ICONS (inner)
+gsap.to(".circle.inner .dot_icon", {
+  rotation: 360,
+  duration: INNER_DURATION,
+  ease: "none",
+  repeat: -1
+});
+
 //////////////
 //// LOADER //
 //////////////
