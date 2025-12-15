@@ -110,8 +110,8 @@ heroTimeline.to(progressBar, {
 // Smooth reset before transition
 heroTimeline.to(progressBar, {
   width: '0%',
-  duration: 0.6,
-  ease: 'power2.out'
+  duration: 1,
+  ease: 'power3.out'
 }, '+=0.1');
 
   heroTimeline.to([currentSlide, heroTitle], {
@@ -154,6 +154,24 @@ if (timerWrapper) {
     heroTimeline?.resume();
   });
 }
+
+// HERO PARALAX //
+
+document.querySelectorAll('.hero_bg_container').forEach(container => {
+  const img = container.querySelector('.hero_bg_img');
+  if (!img) return;
+
+  gsap.to(img, {
+    yPercent: -20,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: container,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   slides[0].classList.add('is-active');
