@@ -5,13 +5,13 @@ console.log ('CORE LOADED');
 // SMOOTH SCROLL //
 ///////////////////
 
-//ScrollSmoother.create({
-//  wrapper: '#smooth-wrapper',
-//  content: '#smooth-content',
-//  smooth: 1.1,
-//  effects: true,
-//  normalizeScroll: true
-//});
+ScrollSmoother.create({
+  wrapper: '#smooth-wrapper',
+  content: '#smooth-content',
+  smooth: 1.1,
+  effects: true,
+  normalizeScroll: true
+});
 
   
 //////////////////////////////////////////////
