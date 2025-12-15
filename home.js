@@ -1,6 +1,55 @@
 //HOME
 console.log ('HOME LOADED V1');
 
+///////////////
+// INTRO ANI //
+///////////////
+function initHomeHeroIntro() {
+  const smallTitles = document.querySelectorAll('.hero_titles_small');
+  const largeTitles = document.querySelectorAll('.hero_titles_large');
+
+  if (!smallTitles.length && !largeTitles.length) return;
+
+  const splits = [];
+
+  smallTitles.forEach(el => {
+    splits.push(
+      new SplitText(el, { type: 'words' })
+    );
+  });
+
+  largeTitles.forEach(el => {
+    splits.push(
+      new SplitText(el, { type: 'words' })
+    );
+  });
+
+  // Collect all words
+  const words = splits.flatMap(split => split.words);
+
+  // Initial state
+  gsap.set(words, {
+    yPercent: 100
+  });
+
+  const tl = gsap.timeline({
+    defaults: {
+      ease: 'power3.out',
+      duration: 0.8
+    }
+  });
+
+  tl.to(words, {
+    yPercent: 0,
+    stagger: 0.06
+  });
+
+  // Cleanup (optional but recommended)
+  tl.add(() => {
+    splits.forEach(split => split.revert());
+  });
+}
+
 ///////////////////
 // FEATURED CASE //
 ///////////////////
