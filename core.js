@@ -74,8 +74,8 @@ function initPageLoader() {
   tl.to(loader, {
     yPercent: -100,
     duration: 1,
-    ease: 'power3.inOut'
-  }, '-=0.75');
+    ease: 'power3.in'
+  }, '-=0.9');
 
   // Cleanup + signal
   tl.add(() => {
