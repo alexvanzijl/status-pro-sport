@@ -183,8 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ScrollTrigger.create({
   trigger: '.why_services',
-  start: 'top 32px',
-  end: 'bottom bottom',
+  start: 'top top+=32',
+  end: '+=100%',          // 👈 THIS is the fix
   pin: '.service_block_360',
   pinSpacing: false
 });
