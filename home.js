@@ -1,5 +1,5 @@
 //HOME
-console.log ('HOME LOADED V1');
+console.log ('HOME LOADED V2');
 
 ////////////////////
 // HERO INTRO ANI //
@@ -84,51 +84,56 @@ function createCaseViewer(config) {
   const slides = Array.from(document.querySelectorAll(config.slides));
   if (!slides.length) return;
 
-  const titleTarget = document.querySelector(config.titleTarget);
-  const linkTarget  = document.querySelector(config.linkTarget);
+  const titleEl     = document.querySelector(config.titleTarget);
+  const linkEl      = document.querySelector(config.linkTarget);
   const textWrap    = document.querySelector(config.textWrap);
   const progressBar = document.querySelector(config.progressBar);
-  const hoverPause  = document.querySelector(config.hoverPause);
+  const hoverWrap   = document.querySelector(config.hoverPause);
 
   let currentIndex = 0;
   let timeline;
 
-  function updateContent(slide) {
-    const titleEl = slide.querySelector('.case_content_loader_title');
-    const linkEl  = slide.querySelector('.case_content_loader_link');
+  function updateContent() {
+    const activeSlide = slides[currentIndex];
+    if (!activeSlide) return;
 
-    if (!titleEl || !linkEl || !titleTarget || !linkTarget) return;
+    const loaderTitle = activeSlide.querySelector('.case_content_loader_title');
+    const loaderLink  = activeSlide.querySelector('.case_content_loader_link');
 
-    const state = textWrap ? Flip.getState(textWrap) : null;
+    const state = Flip.getState(textWrap);
 
-    titleTarget.textContent = titleEl.textContent;
-    linkTarget.href = linkEl.href;
-
-    if (state) {
-      Flip.from(state, {
-        duration: 0.5,
-        ease: 'power2.out',
-        absolute: true
-      });
+    if (loaderTitle && titleEl) {
+      titleEl.textContent = loaderTitle.textContent;
     }
+
+    if (loaderLink && linkEl) {
+      linkEl.href = loaderLink.getAttribute('href');
+    }
+
+    Flip.from(state, {
+      duration: 0.5,
+      ease: 'power2.out',
+      absolute: true
+    });
   }
 
-  function activate(index) {
-    slides.forEach(s => s.classList.remove('is-active'));
-    const slide = slides[index];
-    slide.classList.add('is-active');
-    updateContent(slide);
+  function activateSlide(index) {
+    slides.forEach(slide => slide.classList.remove('is-active'));
+    slides[index].classList.add('is-active');
+    updateContent();
   }
 
-  function run() {
-    const currentSlide = slides[currentIndex];
-    const nextIndex = (currentIndex + 1) % slides.length;
-    const nextSlide = slides[nextIndex];
+  function nextIndex() {
+    return (currentIndex + 1) % slides.length;
+  }
+
+  function runCycle() {
+    const next = nextIndex();
 
     timeline = gsap.timeline({
       onComplete: () => {
-        currentIndex = nextIndex;
-        run();
+        currentIndex = next;
+        runCycle();
       }
     });
 
@@ -146,41 +151,29 @@ function createCaseViewer(config) {
       ease: 'power3.out'
     }, '+=0.1');
 
-    timeline.to([currentSlide, titleTarget], {
+    timeline.to(slides[currentIndex], {
       opacity: 0,
       duration: 0.6,
       ease: 'power2.inOut'
     });
 
-    timeline.call(() => activate(nextIndex));
+    timeline.call(() => activateSlide(next));
 
-    timeline.set(nextSlide, {
-      opacity: 0,
-      scale: 1.2
-    });
-
-    timeline.to(nextSlide, {
-      opacity: 1,
-      scale: 1,
-      duration: 1,
-      ease: 'power3.out'
-    }, '<');
-
-    timeline.to(titleTarget, {
-      opacity: 1,
-      duration: 0.6,
-      ease: 'power2.out'
-    }, '-=0.4');
+    timeline.fromTo(
+      slides[next],
+      { opacity: 0, scale: 1.2 },
+      { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' }
+    );
   }
 
   // Init
   slides[0].classList.add('is-active');
-  updateContent(slides[0]);
-  run();
+  updateContent();
+  runCycle();
 
-  if (hoverPause) {
-    hoverPause.addEventListener('mouseenter', () => timeline.pause());
-    hoverPause.addEventListener('mouseleave', () => timeline.resume());
+  if (hoverWrap) {
+    hoverWrap.addEventListener('mouseenter', () => timeline.pause());
+    hoverWrap.addEventListener('mouseleave', () => timeline.resume());
   }
 }
 
