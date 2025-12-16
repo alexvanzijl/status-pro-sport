@@ -134,6 +134,56 @@ function initImageParallax({
     );
   });
 }
+
+window.addEventListener('loaderComplete', () => {
+  initRevealText();
+});
+
+/////////////////////////
+// GLOBAL TEXT EFFECTS //
+/////////////////////////
+
+function initRevealText() {
+  const elements = document.querySelectorAll('[data-reveal]');
+  if (!elements.length) return;
+
+  elements.forEach(el => {
+    const stagger = parseFloat(el.dataset.revealStagger) || 0.06;
+    const delay = parseFloat(el.dataset.revealDelay) || 0;
+
+    const split = new SplitText(el, {
+      type: 'words',
+      wordsClass: 'reveal-word'
+    });
+
+    split.words.forEach(word => {
+      const inner = document.createElement('span');
+      inner.textContent = word.textContent;
+      word.textContent = '';
+      word.appendChild(inner);
+    });
+
+    const wordsInner = el.querySelectorAll('.reveal-word > span');
+
+    gsap.set(wordsInner, { yPercent: 100 });
+
+    gsap.to(wordsInner, {
+      yPercent: 0,
+      duration: 0.9,
+      ease: 'power3.out', // 🔒 brand-consistent
+      stagger,
+      delay,
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 80%',
+        once: true
+      },
+      onComplete: () => {
+        split.revert();
+      }
+    });
+  });
+}
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
