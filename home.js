@@ -338,23 +338,25 @@ function initStatsOvershoot() {
 
     // Overshoot
     tl.to(counter, {
-      value: endValue * 1.05,
-      duration: 1.2,
-      ease: 'power3.out',
-      onUpdate: () => {
-        numEl.textContent = Math.floor(counter.value);
-      }
-    }, index * 0.15);
+    value: endValue,
+  duration: 1.4,
+  ease: 'power3.out',
+  onUpdate: () => {
+    numEl.textContent = Math.floor(counter.value);
+  }
+}, index * 0.15);
+
 
     // Settle
-    tl.to(counter, {
-      value: endValue,
-      duration: 0.4,
-      ease: 'power2.inOut',
-      onUpdate: () => {
-        numEl.textContent = Math.floor(counter.value);
-      }
-    }, index * 0.15 + 1.2);
+tl.to(counter, {
+  value: endValue,
+  duration: 0.4,
+  ease: 'power2.inOut',
+  onUpdate: () => {
+    numEl.textContent = Math.floor(counter.value);
+  }
+}, index * 0.15 + 1.2);
+
   });
 }
 
