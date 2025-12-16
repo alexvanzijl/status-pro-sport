@@ -269,29 +269,21 @@ gsap.to(".circle.inner", {
 // TESTIMONIALS //
 /////////////////
 
-function initReviewParallax() {
-  const cards = document.querySelectorAll('.reviews_highlight');
+initImageParallax({
+  containerSelector: '.reviews_highlight',
+  imageSelector: '.review_bg_img',
+  yPercent: 10
+});
 
-  cards.forEach(card => {
-    const bg = card.querySelector('.review_bg_img');
-    if (!bg) return;
+///////////
+// CASES //
+///////////
 
-    gsap.fromTo(
-      bg,
-      { yPercent: -5 },
-      {
-        yPercent: 5,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: card,
-          start: 'top bottom',   // when card enters viewport
-          end: 'bottom top',     // when card leaves viewport
-          scrub: .8
-        }
-      }
-    );
-  });
-}
+initImageParallax({
+  containerSelector: '.cases_card',
+  imageSelector: '.cases_img',
+  yPercent: 10
+});
 
 window.addEventListener('DOMContentLoaded', () => {
   initReviewParallax();

@@ -99,6 +99,41 @@ function initPageLoader() {
 window.addEventListener('DOMContentLoaded', () => {
   initPageLoader();
 });
+
+/////////////////////
+// GLOBAL PARALLAX //
+/////////////////////
+
+function initImageParallax({
+  containerSelector,
+  imageSelector,
+  yPercent = 10,
+  start = 'top bottom',
+  end = 'bottom top'
+}) {
+  const containers = document.querySelectorAll(containerSelector);
+  if (!containers.length) return;
+
+  containers.forEach(container => {
+    const image = container.querySelector(imageSelector);
+    if (!image) return;
+
+    gsap.fromTo(
+      image,
+      { yPercent: -yPercent },
+      {
+        yPercent: yPercent,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start,
+          end,
+          scrub: true
+        }
+      }
+    );
+  });
+}
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
