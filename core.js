@@ -156,6 +156,7 @@ function initRevealText() {
       wordsClass: 'reveal-word'
     });
 
+    // Wrap each word in an inner span (mask technique)
     split.words.forEach(word => {
       const inner = document.createElement('span');
       inner.textContent = word.textContent;
@@ -165,23 +166,26 @@ function initRevealText() {
 
     const wordsInner = el.querySelectorAll('.reveal-word > span');
 
-    gsap.set(wordsInner, { yPercent: 100 });
-
-    gsap.to(wordsInner, {
-      yPercent: 0,
-      duration: 0.9,
-      ease: 'power3.out', // 🔒 brand-consistent
-      stagger,
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 80%',
-        once: true
-      },
-      onComplete: () => {
-        split.revert();
+    gsap.fromTo(
+      wordsInner,
+      { yPercent: 100 },
+      {
+        yPercent: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger,
+        delay,
+        immediateRender: false, // 🔑 prevents flash
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 80%',
+          once: true
+        },
+        onComplete: () => {
+          split.revert(); // ✅ safe now
+        }
       }
-    });
+    );
   });
 }
   
