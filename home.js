@@ -184,9 +184,7 @@ function createCaseViewer(config) {
   }
 }
 
-///////////////////
-// HERO INSTANCE //
-///////////////////
+// HERO INSTANCE
 
 document.addEventListener('DOMContentLoaded', () => {
   createCaseViewer({
@@ -199,6 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
     duration: 8
   });
 });
+
+// ATHLETES INSTANCE
+
+createCaseViewer({
+  slides: '.athlete_bg_container.w-dyn-item',
+  titleTarget: '.athlete .featured-case_title',
+  linkTarget: '.athlete .case_timer',
+  textWrap: '.athlete .case_timer_text_wrap',
+  progressBar: '.athlete .case_timer_progress',
+  hoverPause: '.athlete .case_timer_wrapper',
+  duration: 10
+});
+
 
 
 // HERO PARALAX //
@@ -269,246 +280,55 @@ gsap.to(".circle.inner", {
   repeat: -1
 });
 
-//////////////
-//// LOADER //
-//////////////
-//
-//// Vars
-//
-//let loaderDuration = 2;
-//
-////let counter = {
-////  value: 0
-////};
-//
-//// If not a first time visit in this tab
-//if (sessionStorage.getItem("visited") !== null) {
-//  loaderDuration = 1;
-////  counter = {
-////    value: 75
-////  };
-//}
-//sessionStorage.setItem("visited", "true");
-//
-////function updateLoaderText() {
-////  let progress = Math.round(counter.value);
-////  $(".loader_number").text(progress);
-////}
-//
-//let tl_loader = gsap.timeline({ onComplete: endLoaderAnimation });
-//tl_loader.to(counter, {
-//  value: 100,
-//  onUpdate: updateLoaderText,
-//  ease: CustomEase.create("custom", customEase),
-//  duration: loaderDuration
+//// ABOUT ANIMATIONS
+//new SplitType(".about_story_intro", {
+//  types: "lines, words, chars",
+//  tagName: "span"
 //});
 //
-//function endLoaderAnimation() {
-//  $(".trigger").click();
-//  tl_title.resume();
-//  //enable rest of the website after load
-//  const element = document.querySelector(".website.home");
-//  element.style.overflow = "visible";
-//  //element.style.height = "auto";
-//}
+//$(".word").wrap("<div class='line_mask'></div>");
 //
-//tl_loader.from(
-//  ".logo_loader_progress",
-//  {
-//    scaleX: "0",
-//    ease: CustomEase.create("custom", customEase),
-//    duration: loaderDuration
-//  },
-//  0
-//);
-//tl_loader.to(
-//  ".hero",
-//  {
-//    opacity: "100",
-//    ease: CustomEase.create("custom", customEase),
-//    duration: loaderDuration
-//  },
-//  0
-//);
-
-// HERO INTRO
-// Prevent animation glitch on page load
-//gsap.set(".website", { autoAlpha: 1 });
+//let tl_about_story = gsap.timeline({ paused: true });
+//tl_about_story.from(".about_story_intro .word", {
+//  translateY: "150%",
+//  //rotationZ: "-30deg",
+//  stagger: { each: 0.01 },
+//  ease: "power3.out",
+//  delay: 0.5,
+//  duration: 0.5
+//});
 //
-//let tl_title = gsap.timeline({ paused: true });
-//tl_title.from(
-//  ".hero",
-//  {
-//    scale: 0.1,
-//    ease: "power3.inOut",
-//    duration: 1
-//  },
-//  ">0.5"
-//);
-//tl_title.from(
-//  ".hero-txt_line",
-//  {
-//    translateY: "100%",
-//    rotationZ: "30deg",
-//    stagger: { each: 0.05 },
-//    ease: "power3.out",
-//    //delay: 0.5,
-//    duration: 0.5
-//  },
-//  1
-//);
-//tl_title.from(
-//  ".hero_section_but",
-//  {
-//    borderColor: "rgba(0, 0, 0, 0)",
-//    duration: 0.5
-//  },
-//  1.5
-//);
-//tl_title.from(
-//  ".hero_bottom_wrapper",
-//  {
-//    opacity: "0",
-//    duration: 1
-//  },
-//  1
-//);
-//tl_title.from(
-//  ".hero_bg_img_overlay",
-//  {
-//    opacity: "0",
-//    duration: 1
-//  },
-//  1
-//);
-//tl_title.from(
-//  ".nav",
-//  {
-//    opacity: "0",
-//    duration: 1
-//  },
-//  1
-//);
-//tl_title.from(
-//  ".logo_loader_part",
-//  {
-//    translateY: "100%",
-//    stagger: { each: 0.05 },
-//    ease: "power3.out",
-//    //delay: 0.5,
-//    duration: 0.5
-//  },
-//  1
-//);
-
-// ABOUT ANIMATIONS
-new SplitType(".about_story_intro", {
-  types: "lines, words, chars",
-  tagName: "span"
-});
-
-$(".word").wrap("<div class='line_mask'></div>");
-
-let tl_about_story = gsap.timeline({ paused: true });
-tl_about_story.from(".about_story_intro .word", {
-  translateY: "150%",
-  //rotationZ: "-30deg",
-  stagger: { each: 0.01 },
-  ease: "power3.out",
-  delay: 0.5,
-  duration: 0.5
-});
-
-// CONTACT ANIMATIONS
-// ...TXT
-new SplitType(".contact_title", {
-  types: "lines, words, chars",
-  tagName: "span"
-});
-
-$(".contact_title .word").wrap("<div class='line_mask'></div>");
-
-let tl_contact = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".section_contact",
-    start: "top 50%",
-    end: "bottom top",
-    toggleActions: "restart reverse restart reverse"
-  }
-});
-tl_contact.from(".contact_title .word", {
-  translateY: "150%",
-  //rotationZ: "-30deg",
-  stagger: { each: 0.025 },
-  ease: "power3.out",
-  duration: 0.5
-});
-
-//...BALL
-let tl_contact_ball = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".section_contact",
-    scrub: 1,
-    start: "top bottom",
-    end: "bottom bottom"
-  }
-});
-tl_contact_ball.from(".ball", {
-  translateX: "-150%",
-  rotationZ: "-360deg",
-  opacity: "0",
-  ease: "circ.out"
-});
-
-$("#button_story").on("click", function () {
-  setTimeout(() => {
-    console.log("refresh scroll trigger after page height change");
-    ScrollTrigger.refresh();
-  }, 1000);
-});
-
-//////////////////////////////////////////////
-///////////////// UNLOCK CTA /////////////////
-//////////////////////////////////////////////
-
-let tl_unlocked = gsap.timeline({ paused: true });
-
-// tl_unlocked.to("input#email", {
-//   opacity: "0.5",
-//   translateY: "100%",
-//   duration: 0.3
-// });
-
-tl_unlocked.to(".button_secondary.unlocked", {
-  display: "block"
-});
-
-tl_unlocked.to(".button_secondary.unlocked", {
-  opacity: "0",
-  duration: 0.3
-});
-
-tl_unlocked.to(".button_secondary.unlocked", {
-  autoAlpha: 1,
-  delay: 0.5,
-  duration: 0.5
-});
-
-$(".unlock_form").submit(() => {
-  $(".trigger_unlock").click();
-  setTimeout(() => {
-    console.log("submitted");
-    const state = Flip.getState(".button_unlock_wrapper");
-
-    tl_unlocked.play();
-    $(".button_unlock_wrapper").addClass("unlocked");
-
-    Flip.from(state, {
-      duration: 0.5,
-      ease: "power1.inOut"
-    });
-  }, 1000);
-});
+//// CONTACT ANIMATIONS
+//// ...TXT
+//new SplitType(".contact_title", {
+//  types: "lines, words, chars",
+//  tagName: "span"
+//});
+//
+//$(".contact_title .word").wrap("<div class='line_mask'></div>");
+//
+//let tl_contact = gsap.timeline({
+//  scrollTrigger: {
+//    trigger: ".section_contact",
+//    start: "top 50%",
+//    end: "bottom top",
+//    toggleActions: "restart reverse restart reverse"
+//  }
+//});
+//tl_contact.from(".contact_title .word", {
+//  translateY: "150%",
+//  //rotationZ: "-30deg",
+//  stagger: { each: 0.025 },
+//  ease: "power3.out",
+//  duration: 0.5
+//});
+//
+//$("#button_story").on("click", function () {
+//  setTimeout(() => {
+//    console.log("refresh scroll trigger after page height change");
+//    ScrollTrigger.refresh();
+//  }, 1000);
+//});
 
 //////////////////////////////////////////////
 /////////////////// CTA ANI //////////////////
