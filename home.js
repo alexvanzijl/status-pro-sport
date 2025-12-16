@@ -278,9 +278,9 @@ function initReviewParallax() {
 
     gsap.fromTo(
       bg,
-      { yPercent: 5 },
+      { yPercent: -5 },
       {
-        yPercent: -5,
+        yPercent: 5,
         ease: 'none',
         scrollTrigger: {
           trigger: card,
@@ -297,6 +297,62 @@ window.addEventListener('DOMContentLoaded', () => {
   initReviewParallax();
 });
 
+///////////
+// STATS //
+///////////
+
+function initStatsOvershoot() {
+  const stats = document.querySelectorAll('.stats_wrapper');
+
+  stats.forEach((stat, index) => {
+    const numWrapper = stat.querySelector('.stats_num');
+    if (!numWrapper) return;
+
+    const numEl = numWrapper.children[0]; // number
+    const unitEl = numWrapper.children[1]; // M / K (optional)
+
+    const endValue = parseInt(numEl.textContent, 10);
+    if (isNaN(endValue)) return;
+
+    // Clear initial number to avoid flicker
+    numEl.textContent = '0';
+
+    const counter = { value: 0 };
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: stat,
+        start: 'top 80%',
+        once: true
+      },
+      delay: index * 0.1 // subtle stagger between stats
+    });
+
+    // Overshoot
+    tl.to(counter, {
+      value: endValue * 1.05, // 5% overshoot
+      duration: 1.2,
+      ease: 'power3.out',
+      onUpdate: () => {
+        numEl.textContent = Math.floor(counter.value);
+      }
+    });
+
+    // Settle back
+    tl.to(counter, {
+      value: endValue,
+      duration: 0.4,
+      ease: 'power2.inOut',
+      onUpdate: () => {
+        numEl.textContent = Math.floor(counter.value);
+      }
+    });
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initStatsOvershoot();
+});
 
 //// ABOUT ANIMATIONS
 //new SplitType(".about_story_intro", {
