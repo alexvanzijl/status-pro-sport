@@ -278,9 +278,9 @@ function initReviewParallax() {
 
     gsap.fromTo(
       bg,
-      { yPercent: -5 },
+      { yPercent: 5 },
       {
-        yPercent: 5,
+        yPercent: -5,
         ease: 'none',
         scrollTrigger: {
           trigger: card,
