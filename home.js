@@ -1,5 +1,5 @@
 //HOME
-console.log ('HOME LOADED V2');
+console.log ('HOME LOADED V2.1');
 
 ////////////////////
 // HERO INTRO ANI //
@@ -194,12 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // ATHLETES INSTANCE
 
 createCaseViewer({
-  slides: '.athlete_bg_container.w-dyn-item',
-  titleTarget: '.athlete .featured-case_title',
-  linkTarget: '.athlete .case_timer',
-  textWrap: '.athlete .case_timer_text_wrap',
-  progressBar: '.athlete .case_timer_progress',
-  hoverPause: '.athlete .case_timer_wrapper',
+  slides: '.athlete_case_viewer .athlete_bg_container.w-dyn-item',
+  titleTarget: '.athlete_case_viewer .featured-case_title',
+  linkTarget: '.athlete_case_viewer .case_timer',
+  textWrap: '.athlete_case_viewer .case_timer_text_wrap',
+  progressBar: '.athlete_case_viewer .case_timer_progress',
+  hoverPause: '.athlete_case_viewer .case_timer_wrapper',
   duration: 10
 });
 
