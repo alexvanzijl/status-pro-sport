@@ -200,7 +200,7 @@ createCaseViewer({
   textWrap: '.athlete_case_viewer .case_timer_text_wrap',
   progressBar: '.athlete_case_viewer .case_timer_progress',
   hoverPause: '.athlete_case_viewer .case_timer_wrapper',
-  duration: 10
+  duration: 2
 });
 
 
