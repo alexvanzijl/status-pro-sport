@@ -265,6 +265,39 @@ gsap.to(".circle.inner", {
   repeat: -1
 });
 
+//////////////////
+// TESTIMONIALS //
+/////////////////
+
+function initReviewParallax() {
+  const cards = document.querySelectorAll('.reviews_highlight');
+
+  cards.forEach(card => {
+    const bg = card.querySelector('.review_bg_img');
+    if (!bg) return;
+
+    gsap.fromTo(
+      bg,
+      { yPercent: -5 },
+      {
+        yPercent: 5,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: card,
+          start: 'top bottom',   // when card enters viewport
+          end: 'bottom top',     // when card leaves viewport
+          scrub: .8
+        }
+      }
+    );
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initReviewParallax();
+});
+
+
 //// ABOUT ANIMATIONS
 //new SplitType(".about_story_intro", {
 //  types: "lines, words, chars",
