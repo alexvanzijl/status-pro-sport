@@ -76,159 +76,130 @@ window.addEventListener('loaderComplete', () => {
 });
 
 
-///////////////////
-// FEATURED CASE //
-///////////////////
+////////////////////////////
+// GENERIC CASE VIEWER //
+////////////////////////////
 
-function updateHeroContent() {
-  const activeSlide = document.querySelector(
-    '.hero_bg_container.w-dyn-item.is-active'
-  );
+function createCaseViewer(config) {
+  const slides = Array.from(document.querySelectorAll(config.slides));
+  if (!slides.length) return;
 
-  if (!activeSlide) return;
+  const titleTarget = document.querySelector(config.titleTarget);
+  const linkTarget  = document.querySelector(config.linkTarget);
+  const textWrap    = document.querySelector(config.textWrap);
+  const progressBar = document.querySelector(config.progressBar);
+  const hoverPause  = document.querySelector(config.hoverPause);
 
-  const titleEl = activeSlide.querySelector('.case_content_loader_title');
-  const linkEl  = activeSlide.querySelector('.case_content_loader_link');
+  let currentIndex = 0;
+  let timeline;
 
-  const heroTitle = document.querySelector('.featured-case_title');
-  const heroLink  = document.querySelector('.case_timer');
-  const textWrap  = document.querySelector('.case_timer_text_wrap');
+  function updateContent(slide) {
+    const titleEl = slide.querySelector('.case_content_loader_title');
+    const linkEl  = slide.querySelector('.case_content_loader_link');
 
-  // Capture current layout
-  const state = Flip.getState(textWrap);
+    if (!titleEl || !linkEl || !titleTarget || !linkTarget) return;
 
-  if (titleEl && heroTitle) {
-    heroTitle.textContent = titleEl.textContent;
+    const state = textWrap ? Flip.getState(textWrap) : null;
+
+    titleTarget.textContent = titleEl.textContent;
+    linkTarget.href = linkEl.href;
+
+    if (state) {
+      Flip.from(state, {
+        duration: 0.5,
+        ease: 'power2.out',
+        absolute: true
+      });
+    }
   }
 
-  if (linkEl && heroLink) {
-    heroLink.href = linkEl.getAttribute('href');
+  function activate(index) {
+    slides.forEach(s => s.classList.remove('is-active'));
+    const slide = slides[index];
+    slide.classList.add('is-active');
+    updateContent(slide);
   }
 
-  // Animate layout change
-  Flip.from(state, {
-    duration: 0.5,
-    ease: 'power2.out',
-    absolute: true
-  });
+  function run() {
+    const currentSlide = slides[currentIndex];
+    const nextIndex = (currentIndex + 1) % slides.length;
+    const nextSlide = slides[nextIndex];
+
+    timeline = gsap.timeline({
+      onComplete: () => {
+        currentIndex = nextIndex;
+        run();
+      }
+    });
+
+    timeline.set(progressBar, { width: '0%' });
+
+    timeline.to(progressBar, {
+      width: '100%',
+      duration: config.duration || 8,
+      ease: 'linear'
+    });
+
+    timeline.to(progressBar, {
+      width: '0%',
+      duration: 1,
+      ease: 'power3.out'
+    }, '+=0.1');
+
+    timeline.to([currentSlide, titleTarget], {
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.inOut'
+    });
+
+    timeline.call(() => activate(nextIndex));
+
+    timeline.set(nextSlide, {
+      opacity: 0,
+      scale: 1.2
+    });
+
+    timeline.to(nextSlide, {
+      opacity: 1,
+      scale: 1,
+      duration: 1,
+      ease: 'power3.out'
+    }, '<');
+
+    timeline.to(titleTarget, {
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out'
+    }, '-=0.4');
+  }
+
+  // Init
+  slides[0].classList.add('is-active');
+  updateContent(slides[0]);
+  run();
+
+  if (hoverPause) {
+    hoverPause.addEventListener('mouseenter', () => timeline.pause());
+    hoverPause.addEventListener('mouseleave', () => timeline.resume());
+  }
 }
 
+///////////////////
+// HERO INSTANCE //
+///////////////////
 
 document.addEventListener('DOMContentLoaded', () => {
-  const firstSlide = document.querySelector(
-    '.hero_bg_img_list .w-dyn-item'
-  );
-
-  if (firstSlide) {
-    firstSlide.classList.add('is-active');
-    updateHeroContent();
-  }
+  createCaseViewer({
+    slides: '.hero_bg_container.w-dyn-item',
+    titleTarget: '.featured-case_title',
+    linkTarget: '.case_timer',
+    textWrap: '.case_timer_text_wrap',
+    progressBar: '.case_timer_progress',
+    hoverPause: '.case_timer_wrapper',
+    duration: 8
+  });
 });
 
-function setActiveSlide(newSlide) {
-  document
-    .querySelectorAll('.hero_bg_img_list .w-dyn-item')
-    .forEach(item => item.classList.remove('is-active'));
-
-  newSlide.classList.add('is-active');
-  updateHeroContent();
-}
-
-// TIMER //
-
-const slides = Array.from(
-  document.querySelectorAll('.hero_bg_container.w-dyn-item')
-);
-
-const heroTitle = document.querySelector('.featured-case_title');
-const heroLink  = document.querySelector('.case_timer');
-
-const progressBar = document.querySelector('.case_timer_progress');
-
-let currentIndex = 0;
-let heroTimeline;
-
-function getNextIndex() {
-  return (currentIndex + 1) % slides.length;
-}
-
-function activateSlide(index) {
-  slides.forEach(slide => slide.classList.remove('is-active'));
-
-  const newSlide = slides[index];
-  newSlide.classList.add('is-active');
-
-  updateHeroContent(); // your existing CMS sync function
-}
-
-function runHeroCycle() {
-  const currentSlide = slides[currentIndex];
-  const nextIndex    = getNextIndex();
-  const nextSlide    = slides[nextIndex];
-
-  heroTimeline = gsap.timeline({
-    onComplete: () => {
-      currentIndex = nextIndex;
-      runHeroCycle();
-    }
-  });
-
-  heroTimeline.set(progressBar, { width: '0%' });
-
-// Progress bar fill
-heroTimeline.to(progressBar, {
-  width: '100%',
-  duration: 8,
-  ease: 'linear'
-});
-
-// Smooth reset before transition
-heroTimeline.to(progressBar, {
-  width: '0%',
-  duration: 1,
-  ease: 'power3.out'
-}, '+=0.1');
-
-  heroTimeline.to([currentSlide, heroTitle], {
-    opacity: 0,
-    duration: 0.6,
-    ease: 'power2.inOut'
-  });
-
-  heroTimeline.call(() => {
-    activateSlide(nextIndex);
-  });
-
-  heroTimeline.set(nextSlide, {
-    opacity: 0,
-    scale: 1.2
-  });
-
-  heroTimeline.to(nextSlide, {
-    opacity: 1,
-    scale: 1,
-    duration: 1,
-    ease: 'power3.out'
-  }, '<');
-
-  heroTimeline.to(heroTitle, {
-    opacity: 1,
-    duration: 0.6,
-    ease: 'power2.out'
-  }, '-=0.4');
-}
-
-const timerWrapper = document.querySelector('.case_timer_wrapper');
-
-if (timerWrapper) {
-  timerWrapper.addEventListener('mouseenter', () => {
-    heroTimeline?.pause();
-  });
-
-  timerWrapper.addEventListener('mouseleave', () => {
-    heroTimeline?.resume();
-  });
-}
 
 // HERO PARALAX //
 
