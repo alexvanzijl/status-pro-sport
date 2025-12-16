@@ -200,10 +200,8 @@ createCaseViewer({
   textWrap: '.athlete_case_viewer .case_timer_text_wrap',
   progressBar: '.athlete_case_viewer .case_timer_progress',
   hoverPause: '.athlete_case_viewer .case_timer_wrapper',
-  duration: 2
+  duration: 10
 });
-
-
 
 // HERO PARALAX //
 
@@ -221,12 +219,6 @@ document.querySelectorAll('.hero_bg_container').forEach(container => {
       scrub: true
     }
   });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  slides[0].classList.add('is-active');
-  updateHeroContent();
-  runHeroCycle();
 });
 
 // SERVICE BLOCKS
