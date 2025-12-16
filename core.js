@@ -81,7 +81,7 @@ function initPageLoader() {
     yPercent: -100,
     duration: 1,
     ease: 'power3.in'
-  }, '-=1.5');
+  }, '-=.25');
 
   // Cleanup + signal
   tl.add(() => {
