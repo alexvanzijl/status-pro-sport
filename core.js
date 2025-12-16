@@ -233,81 +233,6 @@ $(".menu_item").on("click", function () {
 });
 
 //////////////////////////////////////////////
-///////////////// PAGE LOADER ////////////////
-//////////////////////////////////////////////
-
-window.onload = function () {
-  tl_pageTransition.play();
-};
-
-let tl_pageTransition = gsap.timeline({ paused: true });
-
-tl_pageTransition.to(".page-loader", {
-  opacity: 0,
-  duration: 0.5
-});
-
-tl_pageTransition.to(".page-transition", {
-  translateY: "-100%",
-  ease: "power3.inOut",
-  duration: 1
-});
-
-tl_pageTransition.to(".page-loader", {
-  display: "none"
-});
-
-//////////////////////////////////////////////
-/////////////// PAGE TRANSITION //////////////
-//////////////////////////////////////////////
-
-let tl_pageTransitionAlt = gsap.timeline({ paused: true });
-
-tl_pageTransitionAlt.to(".page-transition_alt_bg", {
-  autoAlpha: 1,
-  duraiton: 0
-});
-
-tl_pageTransitionAlt.from(
-  ".page-transition_alt_bg",
-  {
-    translateY: "100%",
-    ease: "power3.inOut",
-    duration: 1
-  },
-  0
-);
-
-$(".pagetransition_alt").on("click", function () {
-  tl_pageTransitionAlt.play();
-});
-
-// Delay before link open
-$(".pagetransition").click(function (e) {
-  e.preventDefault();
-  var linkUrl = $(this).attr("href");
-  setTimeout(
-    function (url) {
-      window.location = url;
-    },
-    1500,
-    linkUrl
-  );
-});
-
-$(".pagetransition_alt").click(function (e) {
-  e.preventDefault();
-  var linkUrlAlt = $(this).attr("href");
-  setTimeout(
-    function (url) {
-      window.location = url;
-    },
-    1500,
-    linkUrlAlt
-  );
-});
-
-//////////////////////////////////////////////
 /////////////// FOOTER PARALAX ///////////////
 //////////////////////////////////////////////
 
@@ -321,37 +246,6 @@ let tl_footer_paralax = gsap.timeline({
 });
 tl_footer_paralax.from(".footer", {
   translateY: "-30%"
-});
-
-//////////////////////////////////////////////
-/////////////// HEADER TXT ANI ///////////////
-//////////////////////////////////////////////
-
- new SplitType(".header_intro", {
-   types: "lines",
-   tagName: "span"
- });
-
-let tl_header_intro = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".header_intro",
-    start: "top bottom",
-    end: "bottom bottom"
-  }
-});
- tl_header_intro.from(".header_intro .line", {
-   translateY: "200%",
-   opacity: 0,
-   stagger: { each: 0.1 },
-   ease: "power3.out",
-   duration: 1
-});
-tl_header_intro.from(".header_intro", {
-  translateY: "200%",
-  opacity: 0,
-  stagger: { each: 0.1 },
-  ease: "power3.out",
-  duration: 1
 });
 
 //////////////////////////////////////////////
