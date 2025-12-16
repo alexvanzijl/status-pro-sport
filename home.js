@@ -301,7 +301,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // STATS //
 ///////////
 
-function initStatsOvershoot() {
+function initStatsCountUp() {
   const section = document.querySelector('.section_stats');
   if (!section) return;
 
@@ -326,7 +326,6 @@ function initStatsOvershoot() {
     const endValue = parseInt(numEl.textContent, 10);
     if (isNaN(endValue)) return;
 
-    // Reduced motion: set immediately
     if (prefersReducedMotion) {
       numEl.textContent = endValue;
       return;
@@ -336,31 +335,18 @@ function initStatsOvershoot() {
 
     const counter = { value: 0 };
 
-    // Overshoot
     tl.to(counter, {
-    value: endValue,
-  duration: 1.4,
-  ease: 'power3.out',
-  onUpdate: () => {
-    numEl.textContent = Math.floor(counter.value);
-  }
-}, index * 0.15);
-
-
-    // Settle
-tl.to(counter, {
-  value: endValue,
-  duration: 0.4,
-  ease: 'power2.inOut',
-  onUpdate: () => {
-    numEl.textContent = Math.floor(counter.value);
-  }
-}, index * 0.15 + 1.2);
-
+      value: endValue,
+      duration: 1.4,
+      ease: 'power3.out',
+      onUpdate: () => {
+        numEl.textContent = Math.floor(counter.value);
+      }
+    }, index * 0.15);
   });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('loaderComplete', () => {
   initStatsOvershoot();
 });
 
