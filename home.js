@@ -347,7 +347,7 @@ function initStatsCountUp() {
 }
 
 window.addEventListener('loaderComplete', () => {
-  initStatsOvershoot();
+  initStatsCountUp();
 });
 
 //// ABOUT ANIMATIONS
