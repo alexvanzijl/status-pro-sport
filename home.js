@@ -269,16 +269,19 @@ gsap.to(".circle.inner", {
 // TESTIMONIALS //
 /////////////////
 
-initImageParallax({
+initReviewParallax({
   containerSelector: '.reviews_highlight',
   imageSelector: '.review_bg_img',
   yPercent: 10
 });
 
+window.addEventListener('DOMContentLoaded', () => {
+  initReviewParallax();
+});
+
 ///////////
 // CASES //
 ///////////
-
 initImageParallax({
   containerSelector: '.cases_card',
   imageSelector: '.cases_img',
@@ -286,7 +289,7 @@ initImageParallax({
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  initReviewParallax();
+  initImageParallax();
 });
 
 ///////////
