@@ -302,43 +302,51 @@ window.addEventListener('DOMContentLoaded', () => {
 ///////////
 
 function initStatsOvershoot() {
-  const stats = document.querySelectorAll('.stats_wrapper');
+  const section = document.querySelector('.section_stats');
+  if (!section) return;
+
+  const stats = section.querySelectorAll('.stats_wrapper');
+  if (!stats.length) return;
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top 75%',
+      once: true
+    }
+  });
 
   stats.forEach((stat, index) => {
     const numWrapper = stat.querySelector('.stats_num');
     if (!numWrapper) return;
 
-    const numEl = numWrapper.children[0]; // number
-    const unitEl = numWrapper.children[1]; // M / K (optional)
-
+    const numEl = numWrapper.children[0];
     const endValue = parseInt(numEl.textContent, 10);
     if (isNaN(endValue)) return;
 
-    // Clear initial number to avoid flicker
+    // Reduced motion: set immediately
+    if (prefersReducedMotion) {
+      numEl.textContent = endValue;
+      return;
+    }
+
     numEl.textContent = '0';
 
     const counter = { value: 0 };
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: stat,
-        start: 'top 80%',
-        once: true
-      },
-      delay: index * 0.1 // subtle stagger between stats
-    });
-
     // Overshoot
     tl.to(counter, {
-      value: endValue * 1.05, // 5% overshoot
+      value: endValue * 1.05,
       duration: 1.2,
       ease: 'power3.out',
       onUpdate: () => {
         numEl.textContent = Math.floor(counter.value);
       }
-    });
+    }, index * 0.15);
 
-    // Settle back
+    // Settle
     tl.to(counter, {
       value: endValue,
       duration: 0.4,
@@ -346,7 +354,7 @@ function initStatsOvershoot() {
       onUpdate: () => {
         numEl.textContent = Math.floor(counter.value);
       }
-    });
+    }, index * 0.15 + 1.2);
   });
 }
 
