@@ -269,14 +269,10 @@ gsap.to(".circle.inner", {
 // TESTIMONIALS //
 /////////////////
 
-initReviewParallax({
+initImageParallax({
   containerSelector: '.reviews_highlight',
   imageSelector: '.review_bg_img',
   yPercent: 10
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-  initReviewParallax();
 });
 
 ///////////
@@ -289,7 +285,7 @@ initImageParallax({
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  initImageParallax();
+  initReviewParallax();
 });
 
 ///////////
