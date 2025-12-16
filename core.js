@@ -151,12 +151,13 @@ function initRevealText() {
     const stagger = parseFloat(el.dataset.revealStagger) || 0.06;
     const delay = parseFloat(el.dataset.revealDelay) || 0;
 
+    // Split text
     const split = new SplitText(el, {
       type: 'words',
       wordsClass: 'reveal-word'
     });
 
-    // Wrap each word in an inner span (mask technique)
+    // Wrap each word with inner span (mask)
     split.words.forEach(word => {
       const inner = document.createElement('span');
       inner.textContent = word.textContent;
@@ -166,26 +167,34 @@ function initRevealText() {
 
     const wordsInner = el.querySelectorAll('.reveal-word > span');
 
-    gsap.fromTo(
-      wordsInner,
-      { yPercent: 100 },
-      {
-        yPercent: 0,
+    // Initial state
+    gsap.set(wordsInner, { yPercent: 100 });
+
+    // Build paused timeline
+    const tl = gsap.timeline({
+      paused: true,
+      defaults: {
         duration: 0.9,
-        ease: 'power3.out',
-        stagger,
-        delay,
-        immediateRender: false, // 🔑 prevents flash
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 80%',
-          once: true
-        },
-        onComplete: () => {
-          split.revert(); // ✅ safe now
-        }
+        ease: 'power3.out'
+      },
+      onComplete: () => {
+        split.revert(); // ✅ safe now
       }
-    );
+    });
+
+    tl.to(wordsInner, {
+      yPercent: 0,
+      stagger,
+      delay
+    });
+
+    // ScrollTrigger controls the timeline
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 80%',
+      once: true,
+      onEnter: () => tl.play()
+    });
   });
 }
   
