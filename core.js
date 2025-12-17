@@ -28,16 +28,8 @@ function initPageLoader() {
 
   if (!loader || !logo) return;
 
-  // Hard reset loader visibility
+  // Reset transform only (NO visibility control)
   gsap.set(loader, {
-    autoAlpha: 1,        // opacity + visibility
-    pointerEvents: 'all',
-    yPercent: 0
-  });
-
-  // Force show loader immediately
-  gsap.set(loader, {
-    autoAlpha: 1,
     yPercent: 0
   });
 
@@ -46,9 +38,9 @@ function initPageLoader() {
     type: 'words'
   });
 
-  // Initial state: words 100% below
+  // Initial state: words below
   gsap.set(split.words, {
-    yPercent: 100
+    y: '1.1em'
   });
 
   const tl = gsap.timeline({
@@ -59,53 +51,43 @@ function initPageLoader() {
 
   // IN
   tl.to(split.words, {
-    yPercent: 0,
+    y: 0,
     duration: 1,
     stagger: 0.15,
-    delay: 1
+    delay: 0.6
   });
 
   // HOLD
-  tl.to({}, { duration: .25 });
-  
-  // 🔑 IMPORTANT: reveal page BEFORE loader exits
-tl.add(() => {
-  document.documentElement.classList.remove('is-loading');
-});
+  tl.to({}, { duration: 0.25 });
+
+  // 🔑 Reveal page BEFORE loader exits
+  tl.add(() => {
+    document.documentElement.classList.remove('is-loading');
+  });
 
   // OUT (words go up)
   tl.to(split.words, {
-    yPercent: -100,
+    y: '-1.1em',
     duration: 0.5,
     stagger: 0.15,
     ease: 'power3.in'
   });
 
-  // Loader slides up halfway through word-out
+  // Loader slides up
   tl.to(loader, {
     yPercent: -100,
     duration: 1,
     ease: 'power3.in'
-  }, '-=.5');
+  }, '-=0.5');
 
-// Signal completion AFTER animation
-tl.add(() => {
-  split.revert();
-  window.dispatchEvent(new Event('loaderComplete'));
-});
-
-  // gsap.set(loader, {
-  //   autoAlpha: 0,
-  //   pointerEvents: 'none'
-  // });
-  
-  window.dispatchEvent(new Event('loaderComplete'));
-});
+  // Cleanup + signal (ONCE)
+  tl.add(() => {
+    split.revert();
+    window.dispatchEvent(new Event('loaderComplete'));
+  });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  initPageLoader();
-});
+window.addEventListener('DOMContentLoaded', initPageLoader);
 
 /////////////////////
 // GLOBAL PARALLAX //
