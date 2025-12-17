@@ -185,12 +185,11 @@ const revealItems = [];
  * REVEAL: play animation on scroll
  */
 function initRevealText() {
-console.log('[reveal] initRevealText fired');
-console.log('[reveal] revealItems length:', revealItems.length);
+  console.log('[reveal] initRevealText fired');
+  console.log('[reveal] revealItems length:', revealItems.length);
 
   revealItems.forEach(({ el, words, stagger, delay }) => {
 
-    // Build PAUSED timeline (important)
     const tl = gsap.timeline({
       paused: true,
       defaults: {
@@ -199,7 +198,7 @@ console.log('[reveal] revealItems length:', revealItems.length);
       }
     });
 
-    // Make visible right before animating
+    // Reveal visibility right before animating
     tl.call(() => {
       el.style.setProperty('visibility', 'visible', 'important');
     });
@@ -210,26 +209,26 @@ console.log('[reveal] revealItems length:', revealItems.length);
       delay
     });
 
-    // ScrollTrigger only PLAYS the timeline
+    // ✅ FIXED ScrollTrigger
     ScrollTrigger.create({
       trigger: el,
       start: 'top 80%',
-      once: true,
 
-      onEnter: () => tl.play(),
+      onEnter: self => {
+        tl.play();
+        self.kill(); // 🔑 critical
+      },
 
-      // 🔑 handle elements already in view
+      // Handles elements already in view on init / refresh
       onRefresh: self => {
         if (self.progress > 0 && !tl.isActive()) {
           tl.play();
+          self.kill(); // 🔑 critical
         }
       }
     });
   });
-
-  ScrollTrigger.refresh();
 }
-
 
 // Init after loader
 window.addEventListener('loaderComplete', initRevealText);
