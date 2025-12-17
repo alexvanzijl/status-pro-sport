@@ -67,6 +67,11 @@ function initPageLoader() {
 
   // HOLD
   tl.to({}, { duration: .25 });
+  
+  // 🔑 IMPORTANT: reveal page BEFORE loader exits
+tl.add(() => {
+  document.documentElement.classList.remove('is-loading');
+});
 
   // OUT (words go up)
   tl.to(split.words, {
@@ -83,16 +88,17 @@ function initPageLoader() {
     ease: 'power3.in'
   }, '-=.5');
 
-  // Cleanup + signal
-  tl.add(() => {
+// Signal completion AFTER animation
+tl.add(() => {
   split.revert();
+  window.dispatchEvent(new Event('loaderComplete'));
+});
 
-  gsap.set(loader, {
-    autoAlpha: 0,
-    pointerEvents: 'none'
-  });
-
-  document.documentElement.classList.remove('is-loading');
+  // gsap.set(loader, {
+  //   autoAlpha: 0,
+  //   pointerEvents: 'none'
+  // });
+  
   window.dispatchEvent(new Event('loaderComplete'));
 });
 }
