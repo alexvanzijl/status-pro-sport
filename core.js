@@ -92,6 +92,7 @@ function initPageLoader() {
     pointerEvents: 'none'
   });
 
+  document.documentElement.classList.remove('is-loading');
   window.dispatchEvent(new Event('loaderComplete'));
 });
 }
