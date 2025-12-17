@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED V1.4');
+console.log ('CORE LOADED V1.5');
 
 ///////////////////
 // SMOOTH SCROLL //
@@ -136,7 +136,8 @@ function initImageParallax({
 }
 
 window.addEventListener('loaderComplete', () => {
-  initRevealText();
+    console.log('[reveal] initRevealText fired');
+    initRevealText();
 });
 
 /////////////////////////
