@@ -139,6 +139,13 @@ window.addEventListener('loaderComplete', () => {
     initRevealText();
 });
 
+// CASES
+initImageParallax({
+  containerSelector: '.partners',
+  imageSelector: '.partners_bg_img',
+  yPercent: 10
+});
+
 /////////////////////////
 // GLOBAL TEXT EFFECTS //
 /////////////////////////
@@ -185,9 +192,6 @@ const revealItems = [];
  * REVEAL: play animation on scroll
  */
 function initRevealText() {
-  console.log('[reveal] initRevealText fired');
-  console.log('[reveal] revealItems length:', revealItems.length);
-
   revealItems.forEach(({ el, words, stagger, delay }) => {
 
     const tl = gsap.timeline({

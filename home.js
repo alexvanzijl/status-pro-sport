@@ -278,6 +278,7 @@ initImageParallax({
 ///////////
 // CASES //
 ///////////
+
 initImageParallax({
   containerSelector: '.cases_card',
   imageSelector: '.cases_img',
