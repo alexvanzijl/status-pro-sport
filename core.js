@@ -66,7 +66,7 @@ function initPageLoader() {
   });
 
   // HOLD
-  tl.to({}, { duration: .5 });
+  tl.to({}, { duration: .25 });
 
   // OUT (words go up)
   tl.to(split.words, {

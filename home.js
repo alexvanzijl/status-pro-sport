@@ -76,14 +76,16 @@ window.addEventListener('loaderComplete', () => {
 });
 
 
-////////////////////////////
+/////////////////////////
 // GENERIC CASE VIEWER //
-////////////////////////////
+/////////////////////////
 
 function createCaseViewer(config) {
   const slides = Array.from(document.querySelectorAll(config.slides));
   if (!slides.length) return;
 
+  const overlayEl = document.querySelector(config.dimOverlay);
+  const titlesEl  = document.querySelector(config.dimTitles);
   const titleEl     = document.querySelector(config.titleTarget);
   const linkEl      = document.querySelector(config.linkTarget);
   const textWrap    = document.querySelector(config.textWrap);
@@ -172,9 +174,39 @@ function createCaseViewer(config) {
   runCycle();
 
   if (hoverWrap) {
-    hoverWrap.addEventListener('mouseenter', () => timeline.pause());
-    hoverWrap.addEventListener('mouseleave', () => timeline.resume());
-  }
+  hoverWrap.addEventListener('mouseenter', () => {
+    timeline.pause();
+
+    gsap.to(overlayEl, {
+      opacity: 0.4,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
+
+    gsap.to(titlesEl, {
+      opacity: 0.1,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
+  });
+
+  hoverWrap.addEventListener('mouseleave', () => {
+    timeline.resume();
+
+    gsap.to(overlayEl, {
+      opacity: 0,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
+
+    gsap.to(titlesEl, {
+      opacity: 1,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
+  });
+}
+
 }
 
 // HERO INSTANCE
@@ -187,6 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
     textWrap: '.case_timer_text_wrap',
     progressBar: '.case_timer_progress',
     hoverPause: '.case_timer_wrapper',
+    dimOverlay: '.hero_bg_img_overlay',
+    dimTitles: '.hero_titles_wrapper'
     duration: 8
   });
 });
