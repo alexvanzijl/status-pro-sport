@@ -266,41 +266,41 @@ $(document).ready(function () {
 /////////////////// CTA ANI //////////////////
 //////////////////////////////////////////////
 
-new SplitType(".button_txt", {
-  types: "words, chars",
-  tagName: "span"
-});
-
-$(".button_secondary").each(function (index) {
-  let listOne = $(this).find(".button_txt.is-1 .word");
-  let listTwo = $(this).find(".button_txt.is-2 .word");
-  // Timeline
-  let tl = gsap.timeline({ paused: true });
-  tl.to(listOne, {
-    translateY: "-1.5rem",
-    stagger: { each: 0.1 },
-    ease: "power3.Out",
-    yoyoEase: "power3.In",
-    duration: 0.3
-  });
-  tl.from(
-    listTwo,
-    {
-      translateY: "1.5rem",
-      stagger: { each: 0.1 },
-      ease: "power3.Out",
-      yoyoEase: "power3.In",
-      duration: 0.3
-    },
-    0.1
-  );
-  $(this).on("mouseenter", function () {
-    tl.restart();
-  });
-  $(this).on("mouseleave", function () {
-    tl.reverse();
-  });
-});
+// new SplitType(".button_txt", {
+//   types: "words, chars",
+//   tagName: "span"
+// });
+// 
+// $(".button_secondary").each(function (index) {
+//   let listOne = $(this).find(".button_txt.is-1 .word");
+//   let listTwo = $(this).find(".button_txt.is-2 .word");
+//   // Timeline
+//   let tl = gsap.timeline({ paused: true });
+//   tl.to(listOne, {
+//     translateY: "-1.5rem",
+//     stagger: { each: 0.1 },
+//     ease: "power3.Out",
+//     yoyoEase: "power3.In",
+//     duration: 0.3
+//   });
+//   tl.from(
+//     listTwo,
+//     {
+//       translateY: "1.5rem",
+//       stagger: { each: 0.1 },
+//       ease: "power3.Out",
+//       yoyoEase: "power3.In",
+//       duration: 0.3
+//     },
+//     0.1
+//   );
+//   $(this).on("mouseenter", function () {
+//     tl.restart();
+//   });
+//   $(this).on("mouseleave", function () {
+//     tl.reverse();
+//   });
+// });
 
 //////////////////////////////////////////////
 ///////////////// NAVIGATION /////////////////

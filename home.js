@@ -284,10 +284,6 @@ initImageParallax({
   yPercent: 10
 });
 
-window.addEventListener('DOMContentLoaded', () => {
-  initReviewParallax();
-});
-
 ///////////
 // STATS //
 ///////////
