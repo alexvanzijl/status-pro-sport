@@ -41,7 +41,7 @@ function initPageLoader() {
   
   // Initial state: words below
   gsap.set(logo, { visibility: 'visible' });
-  gsap.set(split.words, { y: '1.1em' });
+  gsap.set(split.words, { y: '2em' });
 
   const tl = gsap.timeline({
     defaults: {
