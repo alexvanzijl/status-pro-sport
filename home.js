@@ -179,7 +179,7 @@ function createCaseViewer(config) {
 
     gsap.to(overlayEl, {
       opacity: 0.4,
-      duration: 0.4,
+      duration: 0.6,
       ease: 'power2.out'
     });
 
@@ -194,14 +194,14 @@ function createCaseViewer(config) {
     timeline.resume();
 
     gsap.to(overlayEl, {
-      opacity: 0,
+      opacity: 1,
       duration: 0.4,
       ease: 'power2.out'
     });
 
     gsap.to(titlesEl, {
       opacity: 1,
-      duration: 0.4,
+      duration: 0.3,
       ease: 'power2.out'
     });
   });
