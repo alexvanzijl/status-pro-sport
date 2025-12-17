@@ -143,21 +143,18 @@ window.addEventListener('loaderComplete', () => {
 // GLOBAL TEXT EFFECTS //
 /////////////////////////
 
-function initRevealText() {
-  const elements = document.querySelectorAll('[data-reveal]');
-  if (!elements.length) return;
+const revealItems = [];
 
-  elements.forEach(el => {
-    const stagger = parseFloat(el.dataset.revealStagger) || 0.06;
-    const delay = parseFloat(el.dataset.revealDelay) || 0;
-
-    // Split text
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
+.then(() => {
+  document.querySelectorAll('[data-reveal]').forEach(el => {
+    // Split into words
     const split = new SplitText(el, {
       type: 'words',
       wordsClass: 'reveal-word'
     });
 
-    // Wrap each word with inner span (mask)
+    // Wrap inner span (mask)
     split.words.forEach(word => {
       const inner = document.createElement('span');
       inner.textContent = word.textContent;
@@ -169,34 +166,45 @@ function initRevealText() {
 
     // Initial state
     gsap.set(wordsInner, { yPercent: 100 });
+    el.style.setProperty('visibility', 'hidden', 'important');
 
-    // Build paused timeline
+    // Stash for later
+    revealItems.push({
+      el,
+      words: wordsInner,
+      stagger: parseFloat(el.dataset.revealStagger) || 0.06,
+      delay: parseFloat(el.dataset.revealDelay) || 0
+    });
+  });
+});
+
+function initRevealText() {
+  revealItems.forEach(({ el, words, stagger, delay }) => {
     const tl = gsap.timeline({
-      paused: true,
-      defaults: {
-        duration: 0.9,
-        ease: 'power3.out'
-      },
-      onComplete: () => {
-        split.revert(); // ✅ safe now
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 80%',
+        once: true
       }
     });
 
-    tl.to(wordsInner, {
+    tl.call(() => {
+      el.style.setProperty('visibility', 'visible', 'important');
+    });
+
+    tl.to(words, {
       yPercent: 0,
+      duration: 0.9,
+      ease: 'power3.out',
       stagger,
       delay
     });
-
-    // ScrollTrigger controls the timeline
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 80%',
-      once: true,
-      onEnter: () => tl.play()
-    });
   });
+
+  ScrollTrigger.refresh();
 }
+
+window.addEventListener('loaderComplete', initRevealText);
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
