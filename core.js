@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED V1.5');
+console.log ('CORE LOADED V1.6');
 
 ///////////////////
 // SMOOTH SCROLL //
@@ -136,7 +136,6 @@ function initImageParallax({
 }
 
 window.addEventListener('loaderComplete', () => {
-    console.log('[reveal] initRevealText fired');
     initRevealText();
 });
 
@@ -186,6 +185,7 @@ const revealItems = [];
  * REVEAL: play animation on scroll
  */
 function initRevealText() {
+console.log('[reveal] initRevealText fired');
   revealItems.forEach(({ el, words, stagger, delay }) => {
 
     // Build PAUSED timeline (important)
