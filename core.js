@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED V1.3');
+console.log ('CORE LOADED V1.4');
 
 ///////////////////
 // SMOOTH SCROLL //
@@ -145,16 +145,19 @@ window.addEventListener('loaderComplete', () => {
 
 const revealItems = [];
 
+/**
+ * PRIME: split + mask + set initial state
+ */
 (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
 .then(() => {
   document.querySelectorAll('[data-reveal]').forEach(el => {
-    // Split into words
+
     const split = new SplitText(el, {
       type: 'words',
       wordsClass: 'reveal-word'
     });
 
-    // Wrap inner span (mask)
+    // Wrap each word with inner span (mask)
     split.words.forEach(word => {
       const inner = document.createElement('span');
       inner.textContent = word.textContent;
@@ -168,7 +171,6 @@ const revealItems = [];
     gsap.set(wordsInner, { yPercent: 100 });
     el.style.setProperty('visibility', 'hidden', 'important');
 
-    // Stash for later
     revealItems.push({
       el,
       words: wordsInner,
@@ -178,32 +180,55 @@ const revealItems = [];
   });
 });
 
+
+/**
+ * REVEAL: play animation on scroll
+ */
 function initRevealText() {
   revealItems.forEach(({ el, words, stagger, delay }) => {
+
+    // Build PAUSED timeline (important)
     const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 80%',
-        once: true
+      paused: true,
+      defaults: {
+        duration: 0.9,
+        ease: 'power3.out'
       }
     });
 
+    // Make visible right before animating
     tl.call(() => {
       el.style.setProperty('visibility', 'visible', 'important');
     });
 
     tl.to(words, {
       yPercent: 0,
-      duration: 0.9,
-      ease: 'power3.out',
       stagger,
       delay
+    });
+
+    // ScrollTrigger only PLAYS the timeline
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 80%',
+      once: true,
+
+      onEnter: () => tl.play(),
+
+      // 🔑 handle elements already in view
+      onRefresh: self => {
+        if (self.progress > 0 && !tl.isActive()) {
+          tl.play();
+        }
+      }
     });
   });
 
   ScrollTrigger.refresh();
 }
 
+
+// Init after loader
 window.addEventListener('loaderComplete', initRevealText);
   
 //////////////////////////////////////////////
