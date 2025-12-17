@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar: '.case_timer_progress',
     hoverPause: '.case_timer_wrapper',
     dimOverlay: '.hero_bg_img_overlay',
-    dimTitles: '.hero_titles_wrapper'
+    dimTitles: '.hero_titles_wrapper',
     duration: 8
   });
 });
