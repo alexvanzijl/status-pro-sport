@@ -67,7 +67,7 @@ function initPageLoader() {
 
   // OUT (words go up)
   tl.to(split.words, {
-    y: '-1.1em',
+    y: '-2em',
     duration: 0.5,
     stagger: 0.15,
     ease: 'power3.in'
