@@ -186,6 +186,8 @@ const revealItems = [];
  */
 function initRevealText() {
 console.log('[reveal] initRevealText fired');
+console.log('[reveal] revealItems length:', revealItems.length);
+
   revealItems.forEach(({ el, words, stagger, delay }) => {
 
     // Build PAUSED timeline (important)
