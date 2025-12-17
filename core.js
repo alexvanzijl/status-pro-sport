@@ -168,7 +168,7 @@ const revealItems = [];
     const wordsInner = el.querySelectorAll('.reveal-word > span');
 
     // Initial state
-    gsap.set(wordsInner, { yPercent: 100 });
+    gsap.set(wordsInner, { y: '1.1em' });
     el.style.setProperty('visibility', 'hidden', 'important');
 
     revealItems.push({
@@ -204,7 +204,7 @@ function initRevealText() {
     });
 
     tl.to(words, {
-      yPercent: 0,
+      y: 0,
       stagger,
       delay
     });
