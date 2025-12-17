@@ -23,11 +23,12 @@ ScrollSmoother.create({
 ///////////////////
 
 function initPageLoader() {
-  gsap.set(logo, { visibility: 'visible' });
-  gsap.set(split.words, { y: '1.1em' });
 
   const loader = document.querySelector('.loader_container');
   const logo = document.querySelector('.loader_logo');
+  
+  gsap.set(logo, { visibility: 'visible' });
+  gsap.set(split.words, { y: '1.1em' });
 
   if (!loader || !logo) return;
 
