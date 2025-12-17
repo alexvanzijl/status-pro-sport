@@ -256,26 +256,43 @@ document.querySelectorAll('.hero_bg_container').forEach(container => {
 });
 
 // SERVICE BLOCKS
-window.addEventListener('load', () => ScrollTrigger.refresh());
+ScrollTrigger.matchMedia({
 
-ScrollTrigger.create({
-  trigger: '.why_services',
-  start: 'top top+=32',
+  // DESKTOP & TABLET
+  "(min-width: 768px)": function () {
 
-  end: () => {
-    const grid  = document.querySelector('.service_block_grid');
-    const block = document.querySelector('.service_block_360_pin');
-    const topOffset = 0;
+    ScrollTrigger.create({
+      trigger: '.why_services',
+      start: 'top top+=32',
 
-    const dist = grid.offsetHeight - block.offsetHeight - topOffset;
-    return `+=${Math.max(0, dist)}`;
+      end: () => {
+        const grid  = document.querySelector('.service_block_grid');
+        const block = document.querySelector('.service_block_360_pin');
+        const topOffset = 0;
+
+        const dist = grid.offsetHeight - block.offsetHeight - topOffset;
+        return `+=${Math.max(0, dist)}`;
+      },
+
+      pin: '.service_block_360_pin',
+      pinSpacing: false,
+      anticipatePin: 1
+      // markers: true
+    });
+
   },
 
-  pin: '.service_block_360_pin',
-  pinSpacing: false,
-  anticipatePin: 1,
-  //markers: true
+  // MOBILE
+  "(max-width: 767px)": function () {
+    // Intentionally empty
+    // No pin, no ScrollTrigger created
+  }
+
 });
+
+// Safe refresh
+window.addEventListener('load', () => ScrollTrigger.refresh());
+
 
 // SERVICE VISUAL
 gsap.set(".circle", {
