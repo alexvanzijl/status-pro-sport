@@ -26,9 +26,6 @@ function initPageLoader() {
 
   const loader = document.querySelector('.loader_container');
   const logo = document.querySelector('.loader_logo');
-  
-  gsap.set(logo, { visibility: 'visible' });
-  gsap.set(split.words, { y: '1.1em' });
 
   if (!loader || !logo) return;
 
@@ -41,11 +38,10 @@ function initPageLoader() {
   const split = new SplitText(logo, {
     type: 'words'
   });
-
+  
   // Initial state: words below
-  gsap.set(split.words, {
-    y: '1.1em'
-  });
+  gsap.set(logo, { visibility: 'visible' });
+  gsap.set(split.words, { y: '1.1em' });
 
   const tl = gsap.timeline({
     defaults: {
