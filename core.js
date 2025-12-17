@@ -174,7 +174,7 @@ const revealItems = [];
     revealItems.push({
       el,
       words: wordsInner,
-      stagger: parseFloat(el.dataset.revealStagger) || 0.06,
+      stagger: parseFloat(el.dataset.revealStagger) || 0.04,
       delay: parseFloat(el.dataset.revealDelay) || 0
     });
   });
