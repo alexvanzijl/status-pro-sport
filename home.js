@@ -1,5 +1,5 @@
 //HOME
-console.log ('HOME LOADED V2.1');
+console.log ('HOME LOADED V2.2');
 
 ////////////////////
 // HERO INTRO ANI //
@@ -391,114 +391,38 @@ window.addEventListener('loaderComplete', () => {
 /////////////////// CTA ANI //////////////////
 //////////////////////////////////////////////
 
-new SplitType(".grid_cta_title", {
-  types: "lines, words",
-  tagName: "span"
-});
-
-$(".grid_cta_title .line").wrap("<div class='line_mask'></div>");
-
-$(".grid_cta").each(function (index) {
-  let ctaLineOne = $(this).find(".grid_cta_title.is-1 .word");
-  let ctaLineTwo = $(this).find(".grid_cta_title.is-2 .word");
-  // Timeline
-  let tl_grid_cta = gsap.timeline({ paused: true });
-  tl_grid_cta.to(ctaLineOne, {
-    translateY: "-100%",
-    stagger: { each: 0.1 },
-    ease: "power3.InOut",
-    duration: 0.3
-  });
-  tl_grid_cta.from(
-    ctaLineTwo,
-    {
-      translateY: "100%",
-      stagger: { each: 0.1 },
-      ease: "power3.InOut",
-      duration: 0.3
-    },
-    0.1
-  );
-  $(this).on("mouseenter", function () {
-    tl_grid_cta.restart();
-  });
-  $(this).on("mouseleave", function () {
-    tl_grid_cta.reverse();
-  });
-});
-
-//////////////////////////////////////////////
-//////////////////// ABOUT ///////////////////
-//////////////////////////////////////////////
-
-// TITLE LARGE
-new SplitType(".about_title_large", {
-  types: "lines, words",
-  tagName: "span"
-});
-
-$(".about_title_large .word").wrap("<div class='line_mask'></div>");
-
-let tl_about_title_large = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".about_intro",
-    start: "top 50%",
-    end: "bottom top"
-  }
-});
-tl_about_title_large.from(".about_title_large .word", {
-  translateY: "150%",
-  //rotationZ: "-30deg",
-  stagger: { each: 0.025 },
-  ease: "power3.out",
-  duration: 0.5
-});
-
-// TITLE SMALL
-new SplitType(".about_title_small", {
-  types: "lines, words",
-  tagName: "span"
-});
-
-$(".about_title_small .word").wrap("<div class='line_mask'></div>");
-
-let tl_about_title_small = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".about_pilars",
-    start: "top 50%",
-    end: "bottom top"
-  }
-});
-tl_about_title_small.from(".about_title_small .word", {
-  translateY: "150%",
-  //rotationZ: "-30deg",
-  stagger: { each: 0.025 },
-  ease: "power3.out",
-  duration: 0.5
-});
-
-// SPLINE BALL - IN
-let tl_spline_ball = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".about_intro",
-    scrub: 1,
-    start: "top bottom",
-    end: "bottom bottom"
-  }
-});
-tl_spline_ball.from(".spline_wrapper", {
-  opacity: 0
-});
-
-// SPLINE BALL - OUT
-let tl_spline_ball_out = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".about_pilars",
-    scrub: 1,
-    start: "top bottom",
-    end: "bottom bottom"
-  }
-});
-tl_spline_ball_out.to(".spline_wrapper", {
-  opacity: 0
-});``
+// new SplitType(".grid_cta_title", {
+//   types: "lines, words",
+//   tagName: "span"
+// });
+// 
+// $(".grid_cta_title .line").wrap("<div class='line_mask'></div>");
+// 
+// $(".grid_cta").each(function (index) {
+//   let ctaLineOne = $(this).find(".grid_cta_title.is-1 .word");
+//   let ctaLineTwo = $(this).find(".grid_cta_title.is-2 .word");
+//   // Timeline
+//   let tl_grid_cta = gsap.timeline({ paused: true });
+//   tl_grid_cta.to(ctaLineOne, {
+//     translateY: "-100%",
+//     stagger: { each: 0.1 },
+//     ease: "power3.InOut",
+//     duration: 0.3
+//   });
+//   tl_grid_cta.from(
+//     ctaLineTwo,
+//     {
+//       translateY: "100%",
+//       stagger: { each: 0.1 },
+//       ease: "power3.InOut",
+//       duration: 0.3
+//     },
+//     0.1
+//   );
+//   $(this).on("mouseenter", function () {
+//     tl_grid_cta.restart();
+//   });
+//   $(this).on("mouseleave", function () {
+//     tl_grid_cta.reverse();
+//   });
+// });
