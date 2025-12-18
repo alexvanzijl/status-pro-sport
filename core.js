@@ -225,6 +225,24 @@ function initRevealText() {
 
 // Init after loader
 window.addEventListener('loaderComplete', initRevealText);
+
+//////////////////////////
+// HEADER MARGIN PUSHER //
+//////////////////////////
+
+const header = document.querySelector('.header');
+const pusher = document.querySelector('.menu_pusher');
+
+if (header && pusher) {
+  const ro = new ResizeObserver(entries => {
+    for (const entry of entries) {
+      pusher.style.height = `${entry.contentRect.height}px`;
+    }
+  });
+
+  ro.observe(header);
+}
+
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
