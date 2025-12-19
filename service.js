@@ -14,7 +14,7 @@ document.querySelectorAll('.service_card').forEach(card => {
   const tl = gsap.timeline({ paused: true });
 
 tl.to(inner, {
-  yPercent: -100,
+  yPercent: -10,
   duration: 0.35,
   ease: 'power3.out'
 }, 0)
