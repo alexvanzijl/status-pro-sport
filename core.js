@@ -135,6 +135,13 @@ initImageParallax({
   yPercent: 10
 });
 
+// CTA
+initImageParallax({
+  containerSelector: '.cta',
+  imageSelector: '.cta_bg_img',
+  yPercent: 10
+});
+
 /////////////////////////
 // GLOBAL TEXT EFFECTS //
 /////////////////////////
@@ -322,8 +329,6 @@ window.addEventListener('DOMContentLoaded', () => {
     initSecondaryButtonAnimation(button);
   });
 });
-
-console.log('init secondary button', button);
 
 //////////////////////////////////////////////
 ///////////////// NAVIGATION /////////////////
