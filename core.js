@@ -273,45 +273,55 @@ $(document).ready(function () {
   ).innerHTML = jakarta_datetime_str.toString();
 });
 
-//////////////////////////////////////////////
-/////////////////// CTA ANI //////////////////
-//////////////////////////////////////////////
+//////////////////////////
+// SECONDARY BUTTON ANI //
+//////////////////////////
 
-// new SplitType(".button_txt", {
-//   types: "words, chars",
-//   tagName: "span"
-// });
-// 
-// $(".button_secondary").each(function (index) {
-//   let listOne = $(this).find(".button_txt.is-1 .word");
-//   let listTwo = $(this).find(".button_txt.is-2 .word");
-//   // Timeline
-//   let tl = gsap.timeline({ paused: true });
-//   tl.to(listOne, {
-//     translateY: "-1.5rem",
-//     stagger: { each: 0.1 },
-//     ease: "power3.Out",
-//     yoyoEase: "power3.In",
-//     duration: 0.3
-//   });
-//   tl.from(
-//     listTwo,
-//     {
-//       translateY: "1.5rem",
-//       stagger: { each: 0.1 },
-//       ease: "power3.Out",
-//       yoyoEase: "power3.In",
-//       duration: 0.3
-//     },
-//     0.1
-//   );
-//   $(this).on("mouseenter", function () {
-//     tl.restart();
-//   });
-//   $(this).on("mouseleave", function () {
-//     tl.reverse();
-//   });
-// });
+function initSecondaryButtonAnimation(button) {
+  const txt = button.querySelector('.button_txt');
+  if (!txt) return;
+
+  // Split into words
+  const split = new SplitText(txt, {
+    type: 'words',
+    wordsClass: 'button_word'
+  });
+
+  // Wrap each word with a mask
+  split.words.forEach(word => {
+    const mask = document.createElement('span');
+    mask.classList.add('button_word_mask');
+
+    word.parentNode.insertBefore(mask, word);
+    mask.appendChild(word);
+  });
+
+  // Animation
+  const tl = gsap.timeline({ paused: true });
+
+  tl.to(split.words, {
+    y: '-110%',
+    duration: 0.18,
+    ease: 'power2.in',
+    stagger: 0.03
+  })
+  .set(split.words, {
+    y: '100%'
+  })
+  .to(split.words, {
+    y: '0%',
+    duration: 0.22,
+    ease: 'power2.out',
+    stagger: 0.03
+  });
+
+  // Trigger (hover example)
+  button.addEventListener('mouseenter', () => tl.restart());
+}
+
+document.querySelectorAll('.btn_secondary').forEach(btn => {
+  initSecondaryButtonAnimation(btn);
+});
 
 //////////////////////////////////////////////
 ///////////////// NAVIGATION /////////////////
