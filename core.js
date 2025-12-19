@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED V1.7');
+console.log ('CORE LOADED V1.8');
 
 ///////////////////
 // SMOOTH SCROLL //
@@ -277,20 +277,17 @@ $(document).ready(function () {
 // SECONDARY BUTTON ANI //
 //////////////////////////
 
-gsap.registerPlugin(SplitText);
-
 function initSecondaryButtonAnimation(button) {
   const txt = button.querySelector('.button_txt');
   if (!txt || txt.dataset.split) return;
 
-  txt.dataset.split = 'true'; // prevent double init
+  txt.dataset.split = 'true';
 
   const split = new SplitText(txt, {
     type: 'words',
     wordsClass: 'button_word'
   });
 
-  // Wrap words in masks
   split.words.forEach(word => {
     const mask = document.createElement('span');
     mask.classList.add('button_word_mask');
@@ -317,17 +314,16 @@ function initSecondaryButtonAnimation(button) {
     stagger: 0.03
   });
 
-  // Hover trigger on the BUTTON (anchor)
   button.addEventListener('mouseenter', () => tl.restart());
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.button_secondary').forEach(btn => {
-    initSecondaryButtonAnimation(btn);
+  document.querySelectorAll('.button_secondary').forEach(button => {
+    initSecondaryButtonAnimation(button);
   });
 });
 
-console.log('init secondary button', btn);
+console.log('init secondary button', button);
 
 //////////////////////////////////////////////
 ///////////////// NAVIGATION /////////////////
