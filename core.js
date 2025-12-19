@@ -257,6 +257,19 @@ if (header && pusher) {
   ro.observe(header);
 }
 
+////////////////////////////////////
+// SERVICE BLOCK 1:1 RATIO CHANGE //
+////////////////////////////////////
+
+document.querySelectorAll('.service_block').forEach(el => {
+  const ro = new ResizeObserver(() => {
+    el.style.aspectRatio =
+      el.scrollHeight > el.clientHeight ? 'auto' : '1 / 1';
+  });
+
+  ro.observe(el);
+});
+
   
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
