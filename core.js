@@ -135,6 +135,13 @@ initImageParallax({
   yPercent: 10
 });
 
+// CARDS
+initImageParallax({
+  containerSelector: '.service_card',
+  imageSelector: '.card_bg_img',
+  yPercent: 10
+});
+
 // CTA
 initImageParallax({
   containerSelector: '.cta',
