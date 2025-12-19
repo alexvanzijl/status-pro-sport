@@ -277,17 +277,20 @@ $(document).ready(function () {
 // SECONDARY BUTTON ANI //
 //////////////////////////
 
+gsap.registerPlugin(SplitText);
+
 function initSecondaryButtonAnimation(button) {
   const txt = button.querySelector('.button_txt');
-  if (!txt) return;
+  if (!txt || txt.dataset.split) return;
 
-  // Split into words
+  txt.dataset.split = 'true'; // prevent double init
+
   const split = new SplitText(txt, {
     type: 'words',
     wordsClass: 'button_word'
   });
 
-  // Wrap each word with a mask
+  // Wrap words in masks
   split.words.forEach(word => {
     const mask = document.createElement('span');
     mask.classList.add('button_word_mask');
@@ -296,7 +299,6 @@ function initSecondaryButtonAnimation(button) {
     mask.appendChild(word);
   });
 
-  // Animation
   const tl = gsap.timeline({ paused: true });
 
   tl.to(split.words, {
@@ -315,13 +317,17 @@ function initSecondaryButtonAnimation(button) {
     stagger: 0.03
   });
 
-  // Trigger (hover example)
+  // Hover trigger on the BUTTON (anchor)
   button.addEventListener('mouseenter', () => tl.restart());
 }
 
-document.querySelectorAll('.btn_secondary').forEach(btn => {
-  initSecondaryButtonAnimation(btn);
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.button_secondary').forEach(btn => {
+    initSecondaryButtonAnimation(btn);
+  });
 });
+
+console.log('init secondary button', btn);
 
 //////////////////////////////////////////////
 ///////////////// NAVIGATION /////////////////

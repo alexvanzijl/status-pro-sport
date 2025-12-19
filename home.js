@@ -271,7 +271,7 @@ ScrollTrigger.matchMedia({
         const topOffset = 0;
 
         const dist = grid.offsetHeight - block.offsetHeight - topOffset;
-        return `+=${Math.max(0, dist)}`;
+        return `+=${Math.ma x(0, dist)}`;
       },
 
       pin: '.service_block_360_pin',
