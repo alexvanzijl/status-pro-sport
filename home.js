@@ -270,8 +270,6 @@ ScrollTrigger.matchMedia({
         const block = document.querySelector('.service_block_360_pin');
         const topOffset = 0;
 
-        if (!grid || !block) return '+=0';
-
         const dist = grid.offsetHeight - block.offsetHeight - topOffset;
         return `+=${Math.max(0, dist)}`;
       },
@@ -287,6 +285,7 @@ ScrollTrigger.matchMedia({
   // MOBILE
   "(max-width: 767px)": function () {
     // Intentionally empty
+    // No pin, no ScrollTrigger created
   }
 
 });
