@@ -37,5 +37,14 @@ ScrollTrigger.matchMedia({
   "(max-width: 767px)": function () {
     // Intentionally empty
   }
+});
 
+///////////////////
+// HERO PARALLAX //
+///////////////////
+
+initImageParallax({
+  containerSelector: '.hero_secondary_details_wrapper',
+  imageSelector: '.hero_secondary_details',
+  yPercent: 10
 });
