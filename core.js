@@ -5,18 +5,26 @@ console.log ('CORE LOADED V1.8');
 // SMOOTH SCROLL //
 ///////////////////
 
-const wrapper = document.querySelector('.max-width_wrapper');
-const content = document.querySelector('.website');
+let smoother;
 
-if (wrapper && content) {
-  ScrollSmoother.create({
+window.Webflow ||= [];
+window.Webflow.push(() => {
+  if (smoother) return;
+
+  const wrapper = document.querySelector('.max-width_wrapper');
+  const content = document.querySelector('.website');
+
+  if (!wrapper || !content) return;
+
+  smoother = ScrollSmoother.create({
     wrapper,
     content,
     smooth: 1.2,
     effects: true,
     normalizeScroll: true
   });
-}
+});
+
 
 // Disable on mobile
 ScrollSmoother.create({
