@@ -464,6 +464,14 @@ newsItems.forEach((item) => {
   const newsArrow = item.querySelector(".card_highlights_arrow");
   const newsOverlay = item.querySelector(".card_highlights_overlay");
   const newsLogo = item.querySelector(".card_logo");
+  
+  if (
+  !newsText.length &&
+  !newsTag &&
+  !newsArrow &&
+  !newsOverlay &&
+  !newsLogo
+) return;
 
   const tl_news_preview = gsap.timeline({
     paused: true
