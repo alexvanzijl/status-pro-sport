@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED V1.9');
+console.log ('CORE LOADED V1.10');
 
 ///////////////////
 // SMOOTH SCROLL //
@@ -23,12 +23,6 @@ window.Webflow.push(() => {
     effects: true,
     normalizeScroll: true
   });
-});
-
-
-// Disable on mobile
-ScrollSmoother.create({
-  smooth: window.innerWidth > 991 ? 1.1 : 0,
 });
 
 ///////////////////
