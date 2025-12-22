@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED V1.10');
+console.log ('CORE LOADED V1.11');
 
 ///////////////////
 // SMOOTH SCROLL //
@@ -9,19 +9,27 @@ let smoother;
 
 window.Webflow ||= [];
 window.Webflow.push(() => {
-  if (smoother) return;
-
   const wrapper = document.querySelector('.max-width_wrapper');
   const content = document.querySelector('.website');
-
   if (!wrapper || !content) return;
 
-  smoother = ScrollSmoother.create({
-    wrapper,
-    content,
-    smooth: 1.2,
-    effects: true,
-    normalizeScroll: true
+  ScrollTrigger.matchMedia({
+    "(min-width: 992px)": () => {
+      smoother = ScrollSmoother.create({
+        wrapper,
+        content,
+        smooth: 1.2,
+        effects: true
+      });
+    },
+
+    "(max-width: 991px)": () => {
+      smoother = ScrollSmoother.create({
+        wrapper,
+        content,
+        smooth: 0
+      });
+    }
   });
 });
 
