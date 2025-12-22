@@ -5,13 +5,18 @@ console.log ('CORE LOADED V1.8');
 // SMOOTH SCROLL //
 ///////////////////
 
-const smoother = ScrollSmoother.create({
-  wrapper: '#smooth-wrapper',
-  content: '#smooth-content',
-  smooth: 1.1,
-  effects: true,
-  normalizeScroll: true
-});
+const wrapper = document.querySelector('.max-width_wrapper');
+const content = document.querySelector('.website');
+
+if (wrapper && content) {
+  ScrollSmoother.create({
+    wrapper,
+    content,
+    smooth: 1.2,
+    effects: true,
+    normalizeScroll: true
+  });
+}
 
 // Disable on mobile
 ScrollSmoother.create({
