@@ -9,28 +9,26 @@ let smoother;
 
 window.Webflow ||= [];
 window.Webflow.push(() => {
+  if (smoother) return; // 🔑 prevent double init
+
   const wrapper = document.querySelector('.max-width_wrapper');
   const content = document.querySelector('.website');
-  if (!wrapper || !content) return;
 
-  ScrollTrigger.matchMedia({
-    "(min-width: 992px)": () => {
-      smoother = ScrollSmoother.create({
-        wrapper,
-        content,
-        smooth: 1.2,
-        effects: true
-      });
-    },
+  if (!wrapper || !content) {
+    console.warn('ScrollSmoother: wrapper or content missing');
+    return;
+  }
 
-    "(max-width: 991px)": () => {
-      smoother = ScrollSmoother.create({
-        wrapper,
-        content,
-        smooth: 0
-      });
-    }
-  });
+  // Only enable on desktop
+  if (window.innerWidth >= 992) {
+    smoother = ScrollSmoother.create({
+      wrapper,
+      content,
+      smooth: 1.2,
+      effects: true,
+      normalizeScroll: true
+    });
+  }
 });
 
 ///////////////////
@@ -292,13 +290,12 @@ $(document).ready(function () {
   });
 
   // show timestamps
-  document.getElementById(
-    "time_amsterdam"
-  ).innerHTML = amsterdam_datetime_str.toString();
+    const ams = document.getElementById("time_amsterdam");
+    const jkt = document.getElementById("time_jakarta");
 
-  document.getElementById(
-    "time_jakarta"
-  ).innerHTML = jakarta_datetime_str.toString();
+    if (ams) ams.innerHTML = amsterdam_datetime_str;
+    if (jkt) jkt.innerHTML = jakarta_datetime_str;
+
 });
 
 //////////////////////////
