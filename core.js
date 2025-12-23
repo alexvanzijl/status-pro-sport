@@ -418,58 +418,48 @@ ScrollTrigger.matchMedia({
 ////////////////////
 
 function initMainMenu() {
-  const wrapper = document.querySelector('.menu_wrapper');
-  const overlay = document.querySelector('.menu_overlay');
-  const panel   = document.querySelector('.menu_items');
-  const openBtn = document.querySelector('.nav_open');
+  const wrapper  = document.querySelector('.menu_wrapper');
+  const overlay  = document.querySelector('.menu_overlay');
+  const panel    = document.querySelector('.menu_items');
+  const openBtn  = document.querySelector('.nav_open');
   const closeBtn = document.querySelector('.menu_close');
 
   if (!wrapper || !overlay || !panel || !openBtn || !closeBtn) return;
 
+  // --------------------------------
   // Initial hard state
-  gsap.set(wrapper, { display: 'none' });
+  // --------------------------------
+  gsap.set(wrapper, {
+    display: 'none',
+    position: 'fixed',
+    inset: 0,
+    width: '100vw',
+    height: '100vh'
+  });
+
   gsap.set(overlay, { opacity: 0 });
   gsap.set(panel, { xPercent: 100 });
 
-  // --- Split & prep reveal text ---
-  const revealEls = panel.querySelectorAll('[data-reveal]');
-  const splits = [];
+  // --------------------------------
+  // Re-use GLOBAL reveal structure
+  // --------------------------------
+  const revealWords = panel.querySelectorAll(
+    '[data-reveal] .reveal-word > span'
+  );
 
-  revealEls.forEach(el => {
-    if (el.dataset.split) return;
-    el.dataset.split = 'true';
+  // Ensure nav text starts hidden
+  gsap.set(revealWords, { y: '1.1em' });
 
-    const split = new SplitText(el, {
-      type: 'words',
-      wordsClass: 'reveal_word'
-    });
-
-    split.words.forEach(word => {
-      const mask = document.createElement('span');
-      mask.classList.add('reveal_word_mask');
-      word.parentNode.insertBefore(mask, word);
-      mask.appendChild(word);
-    });
-
-    gsap.set(split.words, { yPercent: 110 });
-    splits.push(split);
-    
-    overlay.addEventListener('click', () => closeBtn.click());
-    
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeBtn.click();
-    });
-
-
-  });
-
-  // --- Master timeline ---
-  const tl = gsap.timeline({
+  // --------------------------------
+  // OPEN TIMELINE
+  // --------------------------------
+  const openTl = gsap.timeline({
     paused: true,
     defaults: { ease: 'power3.out' }
   });
 
-  tl.set(wrapper, { display: 'flex' })
+  openTl
+    .set(wrapper, { display: 'flex' })
     .to(overlay, {
       opacity: 0.5,
       duration: 0.3
@@ -479,35 +469,24 @@ function initMainMenu() {
       duration: 0.6,
       ease: 'power4.out'
     }, 0)
-    .to(
-      splits.flatMap(s => s.words),
-      {
-        yPercent: 0,
-        duration: 0.5,
-        stagger: 0.04
-      },
-      0.15
-    );
+    .to(revealWords, {
+      y: 0,
+      duration: 0.6,
+      stagger: 0.04
+    }, 0.2);
 
-  // --- Open ---
-  openBtn.addEventListener('click', () => {
-    tl.restart();
-    document.body.classList.add('menu-open');
-  });
-
-  // --- Close ---
-  closeBtn.addEventListener('click', () => {
-    gsap.timeline()
-      .to(
-        splits.flatMap(s => s.words),
-        {
-          yPercent: -110,
-          duration: 0.3,
-          stagger: 0.02,
-          ease: 'power2.in'
-        },
-        0
-      )
+  // --------------------------------
+  // CLOSE TIMELINE (created on demand)
+  // --------------------------------
+  function closeMenu() {
+    gsap.timeline({
+      defaults: { ease: 'power2.in' }
+    })
+      .to(revealWords, {
+        y: '-1.1em',
+        duration: 0.3,
+        stagger: 0.02
+      }, 0)
       .to(panel, {
         xPercent: 100,
         duration: 0.4,
@@ -520,10 +499,36 @@ function initMainMenu() {
       .set(wrapper, { display: 'none' })
       .add(() => {
         document.body.classList.remove('menu-open');
+        smoother?.paused(false); // 🔑 restore scroll
       });
+  }
+
+  // --------------------------------
+  // OPEN
+  // --------------------------------
+  openBtn.addEventListener('click', () => {
+    smoother?.paused(true); // 🔑 stop ScrollSmoother
+    document.body.classList.add('menu-open');
+    openTl.restart();
+  });
+
+  // --------------------------------
+  // CLOSE
+  // --------------------------------
+  closeBtn.addEventListener('click', closeMenu);
+  overlay.addEventListener('click', closeMenu);
+
+  // --------------------------------
+  // ESC KEY
+  // --------------------------------
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && wrapper.style.display === 'flex') {
+      closeMenu();
+    }
   });
 }
 
+// Init once DOM is ready
 window.addEventListener('DOMContentLoaded', initMainMenu);
 
 
