@@ -453,6 +453,14 @@ function initMainMenu() {
 
     gsap.set(split.words, { yPercent: 110 });
     splits.push(split);
+    
+    overlay.addEventListener('click', () => closeBtn.click());
+    
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeBtn.click();
+    });
+
+
   });
 
   // --- Master timeline ---
