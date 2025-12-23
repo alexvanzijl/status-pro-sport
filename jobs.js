@@ -42,11 +42,11 @@ function initJobsHeroParallax() {
     }
   })
   .to(back, {
-    yPercent: -10,
+    yPercent: -6,
     ease: 'none'
   }, 0)
   .to(front, {
-    yPercent: -20,
+    yPercent: -24,
     ease: 'none'
   }, 0);
 }
