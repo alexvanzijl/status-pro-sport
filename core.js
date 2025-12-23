@@ -448,7 +448,7 @@ function initMainMenu() {
   );
 
   // Ensure nav text starts hidden
-  gsap.set(revealWords, { y: '1.1em' });
+  gsap.set(revealWords, { y: '1.4em' });
 
   // --------------------------------
   // OPEN TIMELINE
@@ -472,7 +472,7 @@ function initMainMenu() {
     .to(revealWords, {
       y: 0,
       duration: 0.6,
-      stagger: 0.04
+      stagger: 0.02
     }, 0.2);
 
   // --------------------------------
