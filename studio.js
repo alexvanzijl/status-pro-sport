@@ -18,3 +18,10 @@ initImageParallax({
   imageSelector: '.call-out_visual_img',
   yPercent: 10
 });
+
+// CASES
+initImageParallax({
+  containerSelector: '.cases_card',
+  imageSelector: '.cases_img',
+  yPercent: 10
+});
