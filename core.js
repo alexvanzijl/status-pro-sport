@@ -413,68 +413,111 @@ ScrollTrigger.matchMedia({
   }
 });
 
-//////////////////////////////////////////////
-///////////////// NAVIGATION /////////////////
-//////////////////////////////////////////////
+////////////////////
+// MAIN NAV MENU //
+////////////////////
 
-let tl_menu = gsap.timeline({ paused: true, onReverseComplete: resetMenu });
+function initMainMenu() {
+  const wrapper = document.querySelector('.menu_wrapper');
+  const overlay = document.querySelector('.menu_overlay');
+  const panel   = document.querySelector('.menu_items');
+  const openBtn = document.querySelector('.nav_open');
+  const closeBtn = document.querySelector('.menu_close');
 
-tl_menu.to(".menu_wrapper", {
-  display: "block"
-});
-tl_menu.from(
-  ".menu_items",
-  {
-    translateY: "100%",
-    ease: "power3.out",
-    yoyoEase: "power3.in",
-    duration: 0.5
-  },
-  0
-);
-tl_menu.from(".menu_item", {
-  translateY: "100%",
-  stagger: { each: 0.05 },
-  ease: "power3.out",
-  yoyoEase: "power3.in",
-  duration: 0.5
-});
-tl_menu.from(".nav_close", {
-  opacity: 0,
-  duration: 0.5
-});
+  if (!wrapper || !overlay || !panel || !openBtn || !closeBtn) return;
 
-$(".button_secondary.menu").on("click", function () {
-  tl_menu.play();
-});
+  // Initial hard state
+  gsap.set(wrapper, { display: 'none' });
+  gsap.set(overlay, { opacity: 0 });
+  gsap.set(panel, { xPercent: 100 });
 
-$(".button_secondary.menu.inversed").on("click", function () {
-  tl_menu.reverse();
-});
+  // --- Split & prep reveal text ---
+  const revealEls = panel.querySelectorAll('[data-reveal]');
+  const splits = [];
 
-function resetMenu() {
-  const element = document.querySelector(".menu_wrapper");
-  element.style.display = "none";
+  revealEls.forEach(el => {
+    if (el.dataset.split) return;
+    el.dataset.split = 'true';
+
+    const split = new SplitText(el, {
+      type: 'words',
+      wordsClass: 'reveal_word'
+    });
+
+    split.words.forEach(word => {
+      const mask = document.createElement('span');
+      mask.classList.add('reveal_word_mask');
+      word.parentNode.insertBefore(mask, word);
+      mask.appendChild(word);
+    });
+
+    gsap.set(split.words, { yPercent: 110 });
+    splits.push(split);
+  });
+
+  // --- Master timeline ---
+  const tl = gsap.timeline({
+    paused: true,
+    defaults: { ease: 'power3.out' }
+  });
+
+  tl.set(wrapper, { display: 'flex' })
+    .to(overlay, {
+      opacity: 0.5,
+      duration: 0.3
+    }, 0)
+    .to(panel, {
+      xPercent: 0,
+      duration: 0.6,
+      ease: 'power4.out'
+    }, 0)
+    .to(
+      splits.flatMap(s => s.words),
+      {
+        yPercent: 0,
+        duration: 0.5,
+        stagger: 0.04
+      },
+      0.15
+    );
+
+  // --- Open ---
+  openBtn.addEventListener('click', () => {
+    tl.restart();
+    document.body.classList.add('menu-open');
+  });
+
+  // --- Close ---
+  closeBtn.addEventListener('click', () => {
+    gsap.timeline()
+      .to(
+        splits.flatMap(s => s.words),
+        {
+          yPercent: -110,
+          duration: 0.3,
+          stagger: 0.02,
+          ease: 'power2.in'
+        },
+        0
+      )
+      .to(panel, {
+        xPercent: 100,
+        duration: 0.4,
+        ease: 'power3.in'
+      }, 0.1)
+      .to(overlay, {
+        opacity: 0,
+        duration: 0.25
+      }, 0.2)
+      .set(wrapper, { display: 'none' })
+      .add(() => {
+        document.body.classList.remove('menu-open');
+      });
+  });
 }
 
-let tl_menuClick = gsap.timeline({ paused: true });
+window.addEventListener('DOMContentLoaded', initMainMenu);
 
-tl_menuClick.to(".menu_item", {
-  translateY: "-100%",
-  opacity: 0,
-  stagger: { each: 0.05 },
-  ease: "power3.in",
-  yoyoEase: true,
-  duration: 0.5
-});
-
-tl_menuClick.to(".menu_item_mask", {
-  pointerEvents: "none"
-});
-
-$(".menu_item").on("click", function () {
-  tl_menuClick.play();
-});
 
 //////////////////////////////////////////////
 //////////////// REFRESH FIXES ///////////////
