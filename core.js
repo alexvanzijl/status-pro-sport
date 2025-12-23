@@ -441,16 +441,6 @@ function initMainMenu() {
   gsap.set(panel, { xPercent: 100 });
 
   // --------------------------------
-  // Re-use GLOBAL reveal structure
-  // --------------------------------
-  const revealWords = panel.querySelectorAll(
-    '[data-reveal] .reveal-word > span'
-  );
-
-  // Ensure nav text starts hidden
-  gsap.set(revealWords, { y: '1.4em' });
-
-  // --------------------------------
   // OPEN TIMELINE
   // --------------------------------
   const openTl = gsap.timeline({
@@ -505,8 +495,14 @@ openBtn.addEventListener('click', () => {
   smoother?.paused(true);
   document.body.classList.add('menu-open');
 
-  // 🔑 reset reveal words BEFORE playing
-  gsap.set(revealWords, { y: '1.1em' });
+  // 🔑 Query AFTER global reveal system has run
+  const revealWords = panel.querySelectorAll(
+    '[data-reveal] .reveal-word > span'
+  );
+
+  if (revealWords.length) {
+    gsap.set(revealWords, { y: '1.4em' });
+  }
 
   openTl.restart();
 });
