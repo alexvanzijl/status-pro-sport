@@ -441,7 +441,7 @@ function initMainMenu() {
   gsap.set(panel, { xPercent: 100 });
 
   // --------------------------------
-  // OPEN TIMELINE
+  // OPEN TIMELINE (NO TEXT HERE)
   // --------------------------------
   const openTl = gsap.timeline({
     paused: true,
@@ -458,56 +458,64 @@ function initMainMenu() {
       xPercent: 0,
       duration: 0.6,
       ease: 'power4.out'
-    }, 0)
-    .to(() => panel.querySelectorAll('[data-reveal] .reveal-word > span'), {
-  yPercent: 0,
-  duration: 0.5,
-  stagger: 0.02,
-  ease: 'power3.out'
-}, 0.2);
-
+    }, 0);
 
   // --------------------------------
-  // CLOSE TIMELINE (created on demand)
+  // TEXT REVEAL (imperative & safe)
   // --------------------------------
-function closeMenu() {
-  gsap.timeline({
-    defaults: { ease: 'power2.in' }
-  })
-    .to(panel, {
-      xPercent: 100,
-      duration: 0.4,
-      ease: 'power3.in'
-    }, 0)
-    .to(overlay, {
-      opacity: 0,
-      duration: 0.25
-    }, 0.1)
-    .set(wrapper, { display: 'none' })
-    .add(() => {
-      document.body.classList.remove('menu-open');
-      smoother?.paused(false);
+  function revealMenuText() {
+    const revealWords = panel.querySelectorAll(
+      '[data-reveal] .reveal-word > span'
+    );
+
+    if (!revealWords.length) return;
+
+    gsap.set(revealWords, { yPercent: 140 });
+
+    gsap.to(revealWords, {
+      yPercent: 0,
+      duration: 0.5,
+      stagger: 0.02,
+      ease: 'power3.out',
+      delay: 0.2
     });
-}
+  }
+
+  // --------------------------------
+  // CLOSE
+  // --------------------------------
+  function closeMenu() {
+    gsap.timeline({
+      defaults: { ease: 'power2.in' }
+    })
+      .to(panel, {
+        xPercent: 100,
+        duration: 0.4,
+        ease: 'power3.in'
+      }, 0)
+      .to(overlay, {
+        opacity: 0,
+        duration: 0.25
+      }, 0.1)
+      .set(wrapper, { display: 'none' })
+      .add(() => {
+        document.body.classList.remove('menu-open');
+        smoother?.paused(false);
+      });
+  }
 
   // --------------------------------
   // OPEN
   // --------------------------------
-openBtn.addEventListener('click', () => {
-  smoother?.paused(true);
-  document.body.classList.add('menu-open');
+  openBtn.addEventListener('click', () => {
+    smoother?.paused(true);
+    document.body.classList.add('menu-open');
 
-  // 🔑 Query AFTER global reveal system has run
-  const revealWords = panel.querySelectorAll(
-    '[data-reveal] .reveal-word > span'
-  );
+    openTl.restart();
 
-  if (revealWords.length) {
-    gsap.set(revealWords, { yPercent: 140 });
-  }
-
-  openTl.restart();
-});
+    // 🔑 run AFTER open starts
+    revealMenuText();
+  });
 
   // --------------------------------
   // CLOSE
@@ -527,7 +535,6 @@ openBtn.addEventListener('click', () => {
 
 // Init once DOM is ready
 window.addEventListener('DOMContentLoaded', initMainMenu);
-
 
 //////////////////////////////////////////////
 //////////////// REFRESH FIXES ///////////////
