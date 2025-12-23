@@ -459,11 +459,13 @@ function initMainMenu() {
       duration: 0.6,
       ease: 'power4.out'
     }, 0)
-    .to(revealWords, {
-      y: 0,
-      duration: 0.6,
-      stagger: 0.02
+    .to(() => panel.querySelectorAll('[data-reveal] .reveal-word > span'), {
+        y: 0,
+        duration: 0.5,
+        stagger: 0.02,
+        ease: 'power3.out'
     }, 0.2);
+
 
   // --------------------------------
   // CLOSE TIMELINE (created on demand)
