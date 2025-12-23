@@ -298,25 +298,30 @@ $(document).ready(function () {
 
 });
 
-//////////////////////////
-// SECONDARY BUTTON ANI //
-//////////////////////////
+////////////////////////////
+// SECONDARY BUTTON LOGIC //
+////////////////////////////
 
-function initSecondaryButtonAnimation(button) {
-  const txt = button.querySelector('.button_txt');
-  if (!txt || txt.dataset.split) return;
+// CORE
+function initSplitHoverText({
+  trigger,
+  textEl,
+  splitType = 'words',
+  wordClass = 'button_word',
+  maskClass = 'button_word_mask'
+}) {
+  if (!trigger || !textEl || textEl.dataset.split) return;
 
-  txt.dataset.split = 'true';
+  textEl.dataset.split = 'true';
 
-  const split = new SplitText(txt, {
-    type: 'words',
-    wordsClass: 'button_word'
+  const split = new SplitText(textEl, {
+    type: splitType,
+    wordsClass: wordClass
   });
 
   split.words.forEach(word => {
     const mask = document.createElement('span');
-    mask.classList.add('button_word_mask');
-
+    mask.classList.add(maskClass);
     word.parentNode.insertBefore(mask, word);
     mask.appendChild(word);
   });
@@ -339,13 +344,33 @@ function initSecondaryButtonAnimation(button) {
     stagger: 0.03
   });
 
-  button.addEventListener('mouseenter', () => tl.restart());
+  trigger.addEventListener('mouseenter', () => tl.restart());
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+// SEC BUTTON
+function initSecondaryButtons() {
   document.querySelectorAll('.button_secondary').forEach(button => {
-    initSecondaryButtonAnimation(button);
+    initSplitHoverText({
+      trigger: button,
+      textEl: button.querySelector('.button_txt')
+    });
   });
+}
+
+// LIST ITEMS
+function initConnectLines() {
+  document.querySelectorAll('.connect_line').forEach(line => {
+    initSplitHoverText({
+      trigger: line,
+      textEl: line.querySelector('.connect_line_txt')
+    });
+  });
+}
+
+// INIT
+window.addEventListener('DOMContentLoaded', () => {
+  initSecondaryButtons();
+  initConnectLines();
 });
 
 //////////////////////////////////////////////
