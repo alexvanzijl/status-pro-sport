@@ -478,39 +478,38 @@ function initMainMenu() {
   // --------------------------------
   // CLOSE TIMELINE (created on demand)
   // --------------------------------
-  function closeMenu() {
-    gsap.timeline({
-      defaults: { ease: 'power2.in' }
-    })
-      .to(revealWords, {
-        y: '-1.1em',
-        duration: 0.3,
-        stagger: 0.02
-      }, 0)
-      .to(panel, {
-        xPercent: 100,
-        duration: 0.4,
-        ease: 'power3.in'
-      }, 0.1)
-      .to(overlay, {
-        opacity: 0,
-        duration: 0.25
-      }, 0.2)
-      .set(wrapper, { display: 'none' })
-      .add(() => {
-        document.body.classList.remove('menu-open');
-        smoother?.paused(false); // 🔑 restore scroll
-      });
-  }
+function closeMenu() {
+  gsap.timeline({
+    defaults: { ease: 'power2.in' }
+  })
+    .to(panel, {
+      xPercent: 100,
+      duration: 0.4,
+      ease: 'power3.in'
+    }, 0)
+    .to(overlay, {
+      opacity: 0,
+      duration: 0.25
+    }, 0.1)
+    .set(wrapper, { display: 'none' })
+    .add(() => {
+      document.body.classList.remove('menu-open');
+      smoother?.paused(false);
+    });
+}
 
   // --------------------------------
   // OPEN
   // --------------------------------
-  openBtn.addEventListener('click', () => {
-    smoother?.paused(true); // 🔑 stop ScrollSmoother
-    document.body.classList.add('menu-open');
-    openTl.restart();
-  });
+openBtn.addEventListener('click', () => {
+  smoother?.paused(true);
+  document.body.classList.add('menu-open');
+
+  // 🔑 reset reveal words BEFORE playing
+  gsap.set(revealWords, { y: '1.1em' });
+
+  openTl.restart();
+});
 
   // --------------------------------
   // CLOSE
