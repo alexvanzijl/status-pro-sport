@@ -460,11 +460,11 @@ function initMainMenu() {
       ease: 'power4.out'
     }, 0)
     .to(() => panel.querySelectorAll('[data-reveal] .reveal-word > span'), {
-        y: 0,
-        duration: 0.5,
-        stagger: 0.02,
-        ease: 'power3.out'
-    }, 0.2);
+  yPercent: 0,
+  duration: 0.5,
+  stagger: 0.02,
+  ease: 'power3.out'
+}, 0.2);
 
 
   // --------------------------------
@@ -503,7 +503,7 @@ openBtn.addEventListener('click', () => {
   );
 
   if (revealWords.length) {
-    gsap.set(revealWords, { y: '1.4em' });
+    gsap.set(revealWords, { yPercent: 140 });
   }
 
   openTl.restart();
