@@ -451,7 +451,7 @@ function initMainMenu() {
   openTl
     .set(wrapper, { display: 'flex' })
     .to(overlay, {
-      opacity: 0.5,
+      opacity: 0.7,
       duration: 0.3
     }, 0)
     .to(panel, {
