@@ -589,6 +589,17 @@ function initMainMenu() {
       onEnter: () => {
         hideTl.kill();
         showTl.restart();
+        // Shine sweep (runs once when revealed)
+        gsap.fromTo(
+        openScrollBtn,
+        { '--shine-x': '-120%' },
+        {
+            '--shine-x': '120%',
+            duration: 0.45,
+            ease: 'power2.out'
+        }
+);
+
       },
       onLeaveBack: () => {
         showTl.kill();
