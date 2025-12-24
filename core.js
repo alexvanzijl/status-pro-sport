@@ -426,6 +426,29 @@ function initMainMenu() {
   const closeBtn       = document.querySelector('.menu_close');
 
   if (!wrapper || !overlay || !panel || !openBtn || !closeBtn) return;
+  
+  // --------------------------------
+  // HOVER SHIMMER
+  // --------------------------------
+
+if (openScrollBtn) {
+  let hoverTl;
+
+  openScrollBtn.addEventListener('mouseenter', () => {
+    // kill any previous shimmer
+    hoverTl?.kill();
+
+    hoverTl = gsap.fromTo(
+      openScrollBtn,
+      { '--shine-x': '-120%' },
+      {
+        '--shine-x': '120%',
+        duration: 0.25,
+        ease: 'power1.out'
+      }
+    );
+  });
+}
 
   // --------------------------------
   // INITIAL HARD STATE
@@ -595,7 +618,7 @@ function initMainMenu() {
         { '--shine-x': '-120%' },
         {
             '--shine-x': '120%',
-            duration: 0.45,
+            duration: 0.65,
             ease: 'power2.out'
         }
 );
