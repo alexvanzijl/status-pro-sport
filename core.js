@@ -545,32 +545,59 @@ function initMainMenu() {
   });
 
   ////////////////////////////////////
-  // SCROLL NAV BUTTON REVEAL (NEW) //
-  ////////////////////////////////////
+// SCROLL NAV BUTTON REVEAL (UPDATED)
+////////////////////////////////////
 
-  if (openScrollBtn) {
-    let revealed = false;
+if (openScrollBtn) {
+  const showTl = gsap.timeline({ paused: true });
+  const hideTl = gsap.timeline({ paused: true });
 
-    ScrollTrigger.create({
-      trigger: document.body,
-      scroller: smoother?.wrapper || undefined,
-      start: 'top -25%',
-      onEnter: () => {
-        if (revealed) return;
-        revealed = true;
-
-        gsap.set(openScrollBtn, { display: 'flex' });
-
-        gsap.to(openScrollBtn, {
-          opacity: 1,
-          scale: 1,
-          yPercent: 0,
-          duration: 0.45,
-          ease: 'back.out(2.4)'
-        });
-      }
+  // IN animation
+  showTl
+    .set(openScrollBtn, { display: 'flex' })
+    .to(openScrollBtn, {
+      opacity: 1,
+      scale: 1,
+      yPercent: 0,
+      duration: 0.4,
+      ease: 'back.out(2.4)'
     });
-  }
+
+  // OUT animation
+  hideTl
+    .to(openScrollBtn, {
+      opacity: 0,
+      scale: 0.25,
+      yPercent: 100,
+      duration: 0.25,
+      ease: 'power2.in'
+    })
+    .set(openScrollBtn, { display: 'none' });
+
+  ScrollTrigger.create({
+    trigger: document.body,
+    scroller: smoother?.wrapper || undefined,
+    start: 'top -25%',
+    onEnter: () => {
+      hideTl.kill();
+      showTl.restart();
+      
+      // SHINE
+      gsap.fromTo(
+        openScrollBtn,
+        { '--shine': '-120%' },
+        { '--shine': '120%',
+        duration: 0.45,
+        ease: 'power2.out'
+        }
+    );
+      
+    },
+    onLeaveBack: () => {
+      showTl.kill();
+      hideTl.restart();
+    }
+  });
 }
 
 // Init once DOM is ready
