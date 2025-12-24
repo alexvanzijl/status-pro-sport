@@ -418,16 +418,17 @@ ScrollTrigger.matchMedia({
 ////////////////////
 
 function initMainMenu() {
-  const wrapper  = document.querySelector('.menu_wrapper');
-  const overlay  = document.querySelector('.menu_overlay');
-  const panel    = document.querySelector('.menu_items');
-  const openBtn  = document.querySelector('.nav_open');
-  const closeBtn = document.querySelector('.menu_close');
+  const wrapper        = document.querySelector('.menu_wrapper');
+  const overlay        = document.querySelector('.menu_overlay');
+  const panel          = document.querySelector('.menu_items');
+  const openBtn        = document.querySelector('.nav_open');
+  const openScrollBtn  = document.querySelector('.nav_open_scroll');
+  const closeBtn       = document.querySelector('.menu_close');
 
   if (!wrapper || !overlay || !panel || !openBtn || !closeBtn) return;
 
   // --------------------------------
-  // Initial hard state
+  // INITIAL HARD STATE
   // --------------------------------
   gsap.set(wrapper, {
     display: 'none',
@@ -440,8 +441,18 @@ function initMainMenu() {
   gsap.set(overlay, { opacity: 0 });
   gsap.set(panel, { xPercent: 100 });
 
+  if (openScrollBtn) {
+    gsap.set(openScrollBtn, {
+      display: 'none',
+      opacity: 0,
+      scale: 0.25,
+      yPercent: 100,
+      willChange: 'transform, opacity'
+    });
+  }
+
   // --------------------------------
-  // OPEN TIMELINE (NO TEXT HERE)
+  // OPEN TIMELINE (NO TEXT)
   // --------------------------------
   const openTl = gsap.timeline({
     paused: true,
@@ -461,18 +472,18 @@ function initMainMenu() {
     }, 0);
 
   // --------------------------------
-  // TEXT REVEAL (imperative & safe)
+  // TEXT REVEAL
   // --------------------------------
   function revealMenuText() {
-    const revealWords = panel.querySelectorAll(
+    const words = panel.querySelectorAll(
       '[data-reveal] .reveal-word > span'
     );
 
-    if (!revealWords.length) return;
+    if (!words.length) return;
 
-    gsap.set(revealWords, { yPercent: 140 });
+    gsap.set(words, { yPercent: 140 });
 
-    gsap.to(revealWords, {
+    gsap.to(words, {
       yPercent: 0,
       duration: 0.5,
       stagger: 0.02,
@@ -482,8 +493,16 @@ function initMainMenu() {
   }
 
   // --------------------------------
-  // CLOSE
+  // OPEN / CLOSE
   // --------------------------------
+  function openMenu() {
+    smoother?.paused(true);
+    document.body.classList.add('menu-open');
+
+    openTl.restart();
+    revealMenuText();
+  }
+
   function closeMenu() {
     gsap.timeline({
       defaults: { ease: 'power2.in' }
@@ -505,21 +524,11 @@ function initMainMenu() {
   }
 
   // --------------------------------
-  // OPEN
+  // CLICK TRIGGERS
   // --------------------------------
-  openBtn.addEventListener('click', () => {
-    smoother?.paused(true);
-    document.body.classList.add('menu-open');
+  openBtn.addEventListener('click', openMenu);
+  openScrollBtn?.addEventListener('click', openMenu);
 
-    openTl.restart();
-
-    // 🔑 run AFTER open starts
-    revealMenuText();
-  });
-
-  // --------------------------------
-  // CLOSE
-  // --------------------------------
   closeBtn.addEventListener('click', closeMenu);
   overlay.addEventListener('click', closeMenu);
 
@@ -531,50 +540,66 @@ function initMainMenu() {
       closeMenu();
     }
   });
+
+  //////////////////////////////////////
+  // SCROLL NAV BUTTON (IN + OUT + SHINE)
+  //////////////////////////////////////
+
+  if (openScrollBtn) {
+    const showTl = gsap.timeline({ paused: true });
+    const hideTl = gsap.timeline({ paused: true });
+
+    // IN
+    showTl
+      .set(openScrollBtn, { display: 'flex' })
+      .to(openScrollBtn, {
+        opacity: 1,
+        scale: 1,
+        yPercent: 0,
+        duration: 0.4,
+        ease: 'back.out(2.4)'
+      })
+      // subtle shine sweep
+      .fromTo(
+        openScrollBtn,
+        { backgroundPosition: '0% 50%' },
+        {
+          backgroundPosition: '200% 50%',
+          duration: 0.45,
+          ease: 'power2.out'
+        },
+        0.1
+      );
+
+    // OUT
+    hideTl
+      .to(openScrollBtn, {
+        opacity: 0,
+        scale: 0.25,
+        yPercent: 100,
+        duration: 0.25,
+        ease: 'power2.in'
+      })
+      .set(openScrollBtn, { display: 'none' });
+
+    ScrollTrigger.create({
+      trigger: document.body,
+      scroller: smoother?.wrapper || undefined,
+      start: 'top -25%',
+      onEnter: () => {
+        hideTl.kill();
+        showTl.restart();
+      },
+      onLeaveBack: () => {
+        showTl.kill();
+        hideTl.restart();
+      }
+    });
+  }
 }
 
-// Init once DOM is ready
+// INIT
 window.addEventListener('DOMContentLoaded', initMainMenu);
-
-///////////////////
-// HAMBURGER ANI //
-///////////////////
-
-function revealScrollNavButton(button) {
-  gsap.set(button, {
-    display: 'flex',
-    opacity: 0,
-    scale: 0.25,
-    yPercent: 100
-  });
-
-  gsap.to(button, {
-    opacity: 1,
-    scale: 1,
-    yPercent: 0,
-    duration: 0.45,
-    ease: 'back.out(2.4)'
-  });
-}
-
-function initScrollNavButton() {
-  const button = document.querySelector('.nav_open_scroll');
-  if (!button) return;
-
-  let revealed = false;
-
-  ScrollTrigger.create({
-    trigger: document.body,
-    scroller: smoother?.wrapper || undefined,
-    start: 'top -25%',
-    onEnter: () => {
-      if (revealed) return;
-      revealed = true;
-      revealScrollNavButton(button);
-    }
-  });
-}
-
 
 //////////////////////////////////////////////
 //////////////// REFRESH FIXES ///////////////
