@@ -418,12 +418,11 @@ ScrollTrigger.matchMedia({
 ////////////////////
 
 function initMainMenu() {
-  const wrapper        = document.querySelector('.menu_wrapper');
-  const overlay        = document.querySelector('.menu_overlay');
-  const panel          = document.querySelector('.menu_items');
-  const openBtn        = document.querySelector('.nav_open');
-  const openScrollBtn  = document.querySelector('.nav_open_scroll');
-  const closeBtn       = document.querySelector('.menu_close');
+  const wrapper  = document.querySelector('.menu_wrapper');
+  const overlay  = document.querySelector('.menu_overlay');
+  const panel    = document.querySelector('.menu_items');
+  const openBtn  = document.querySelector('.nav_open');
+  const closeBtn = document.querySelector('.menu_close');
 
   if (!wrapper || !overlay || !panel || !openBtn || !closeBtn) return;
 
@@ -440,16 +439,6 @@ function initMainMenu() {
 
   gsap.set(overlay, { opacity: 0 });
   gsap.set(panel, { xPercent: 100 });
-
-  // Scroll nav button hidden by default
-  if (openScrollBtn) {
-    gsap.set(openScrollBtn, {
-      display: 'none',
-      opacity: 0,
-      scale: 0.25,
-      yPercent: 100
-    });
-  }
 
   // --------------------------------
   // OPEN TIMELINE (NO TEXT HERE)
@@ -493,17 +482,6 @@ function initMainMenu() {
   }
 
   // --------------------------------
-  // OPEN (shared logic)
-  // --------------------------------
-  function openMenu() {
-    smoother?.paused(true);
-    document.body.classList.add('menu-open');
-
-    openTl.restart();
-    revealMenuText();
-  }
-
-  // --------------------------------
   // CLOSE
   // --------------------------------
   function closeMenu() {
@@ -527,11 +505,21 @@ function initMainMenu() {
   }
 
   // --------------------------------
-  // CLICK TRIGGERS
+  // OPEN
   // --------------------------------
-  openBtn.addEventListener('click', openMenu);
-  openScrollBtn?.addEventListener('click', openMenu);
+  openBtn.addEventListener('click', () => {
+    smoother?.paused(true);
+    document.body.classList.add('menu-open');
 
+    openTl.restart();
+
+    // 🔑 run AFTER open starts
+    revealMenuText();
+  });
+
+  // --------------------------------
+  // CLOSE
+  // --------------------------------
   closeBtn.addEventListener('click', closeMenu);
   overlay.addEventListener('click', closeMenu);
 
@@ -543,38 +531,50 @@ function initMainMenu() {
       closeMenu();
     }
   });
-
-  ////////////////////////////////////
-  // SCROLL NAV BUTTON REVEAL (NEW) //
-  ////////////////////////////////////
-
-  if (openScrollBtn) {
-    let revealed = false;
-
-    ScrollTrigger.create({
-      trigger: document.body,
-      scroller: smoother?.wrapper || undefined,
-      start: 'top -25%',
-      onEnter: () => {
-        if (revealed) return;
-        revealed = true;
-
-        gsap.set(openScrollBtn, { display: 'flex' });
-
-        gsap.to(openScrollBtn, {
-          opacity: 1,
-          scale: 1,
-          yPercent: 0,
-          duration: 0.45,
-          ease: 'back.out(2.4)'
-        });
-      }
-    });
-  }
 }
 
 // Init once DOM is ready
 window.addEventListener('DOMContentLoaded', initMainMenu);
+
+///////////////////
+// HAMBURGER ANI //
+///////////////////
+
+function revealScrollNavButton(button) {
+  gsap.set(button, {
+    display: 'flex',
+    opacity: 0,
+    scale: 0.25,
+    yPercent: 100
+  });
+
+  gsap.to(button, {
+    opacity: 1,
+    scale: 1,
+    yPercent: 0,
+    duration: 0.45,
+    ease: 'back.out(2.4)'
+  });
+}
+
+function initScrollNavButton() {
+  const button = document.querySelector('.nav_open_scroll');
+  if (!button) return;
+
+  let revealed = false;
+
+  ScrollTrigger.create({
+    trigger: document.body,
+    scroller: smoother?.wrapper || undefined,
+    start: 'top -25%',
+    onEnter: () => {
+      if (revealed) return;
+      revealed = true;
+      revealScrollNavButton(button);
+    }
+  });
+}
+
 
 //////////////////////////////////////////////
 //////////////// REFRESH FIXES ///////////////
