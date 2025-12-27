@@ -563,10 +563,31 @@ if (openScrollBtn) {
       closeMenu();
     }
   });
+  
+  ///////////////////////////////
+  // TOTAL NUMBER OF CASES TXT //
+  ///////////////////////////////
+  
+  document.addEventListener('DOMContentLoaded', () => {
+  const cases = document.querySelectorAll('.cases_card');
+  const total = cases.length;
 
-  //////////////////////////////////////
-  // SCROLL NAV BUTTON (IN + OUT + SHINE)
-  //////////////////////////////////////
+  cases.forEach((card, i) => {
+    const indexEl = card.querySelector('.case_index');
+    if (!indexEl) return;
+
+    const current = String(i + 1).padStart(2, '0');
+    const totalFormatted = String(total).padStart(2, '0');
+
+    indexEl.setAttribute('data-index', current);
+    indexEl.setAttribute('data-total', totalFormatted);
+  });
+});
+
+
+  //////////////////////////////////////////
+  // SCROLL NAV BUTTON (IN + OUT + SHINE) //
+  //////////////////////////////////////////
 
   if (openScrollBtn) {
     const showTl = gsap.timeline({ paused: true });
