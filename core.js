@@ -568,12 +568,19 @@ if (openScrollBtn) {
   // TOTAL NUMBER OF CASES TXT //
   ///////////////////////////////
   
-  document.addEventListener('DOMContentLoaded', () => {
+window.Webflow ||= [];
+window.Webflow.push(() => {
   const cases = document.querySelectorAll('.cases_card');
   const total = cases.length;
 
+  console.log('Total cases:', total);
+
   cases.forEach((card, i) => {
     const indexEl = card.querySelector('.case_index');
+
+    console.log('Card:', card);
+    console.log('Index element:', indexEl);
+
     if (!indexEl) return;
 
     const current = String(i + 1).padStart(2, '0');
@@ -583,7 +590,6 @@ if (openScrollBtn) {
     indexEl.setAttribute('data-total', totalFormatted);
   });
 });
-
 
   //////////////////////////////////////////
   // SCROLL NAV BUTTON (IN + OUT + SHINE) //
