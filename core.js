@@ -578,8 +578,8 @@ window.Webflow.push(() => {
   cases.forEach((card, i) => {
     const indexEl = card.querySelector('.case_index');
 
-    console.log('Card:', card);
-    console.log('Index element:', indexEl);
+    //console.log('Card:', card);
+    //console.log('Index element:', indexEl);
 
     if (!indexEl) return;
 
