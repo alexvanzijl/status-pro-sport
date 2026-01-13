@@ -162,6 +162,14 @@ initImageParallax({
   yPercent: 10
 });
 
+// TESTIMONIALS
+
+initImageParallax({
+  containerSelector: '.reviews_highlight',
+  imageSelector: '.review_bg_img',
+  yPercent: 10
+});
+
 /////////////////////////
 // GLOBAL TEXT EFFECTS //
 /////////////////////////
