@@ -600,7 +600,7 @@ function initMainMenu() {
     }
   });
 
-  //////////////////////////////////////////
+    //////////////////////////////////////////
   // SCROLL NAV BUTTON (IN + OUT + SHINE) //
   //////////////////////////////////////////
 
@@ -608,6 +608,7 @@ function initMainMenu() {
     const showTl = gsap.timeline({ paused: true });
     const hideTl = gsap.timeline({ paused: true });
 
+    // IN
     showTl
       .set(openScrollBtn, { display: 'flex' })
       .to(openScrollBtn, {
@@ -620,10 +621,15 @@ function initMainMenu() {
       .fromTo(
         openScrollBtn,
         { backgroundPosition: '0% 50%' },
-        { backgroundPosition: '200% 50%', duration: 0.45, ease: 'power2.out' },
+        {
+          backgroundPosition: '200% 50%',
+          duration: 0.45,
+          ease: 'power2.out'
+        },
         0.1
       );
 
+    // OUT
     hideTl
       .to(openScrollBtn, {
         opacity: 0,
@@ -634,14 +640,23 @@ function initMainMenu() {
       })
       .set(openScrollBtn, { display: 'none' });
 
-    const scrollerEl =
-      typeof smoother !== 'undefined' && smoother && smoother.wrapper
-        ? smoother.wrapper
-        : undefined;
+    // Resolve scroller element SAFELY (ScrollSmoother wrapper is often a function: wrapper())
+    let scrollerEl = null;
 
-    ScrollTrigger.create({
+    if (typeof smoother !== 'undefined' && smoother) {
+      // wrapper() method (most common)
+      if (typeof smoother.wrapper === 'function') {
+        scrollerEl = smoother.wrapper();
+      }
+      // wrapper element property (less common, but handle it)
+      else if (smoother.wrapper && smoother.wrapper.nodeType === 1) {
+        scrollerEl = smoother.wrapper;
+      }
+    }
+
+    // Build config without scroller by default (window scrolling)
+    const stConfig = {
       trigger: document.body,
-      scroller: scrollerEl,
       start: 'top -25%',
       onEnter: () => {
         if (MOBILE_MQ.matches) return;
@@ -652,7 +667,11 @@ function initMainMenu() {
         gsap.fromTo(
           openScrollBtn,
           { '--shine-x': '-120%' },
-          { '--shine-x': '120%', duration: 0.65, ease: 'power2.out' }
+          {
+            '--shine-x': '120%',
+            duration: 0.65,
+            ease: 'power2.out'
+          }
         );
       },
       onLeaveBack: () => {
@@ -661,9 +680,15 @@ function initMainMenu() {
         showTl.kill();
         hideTl.restart();
       }
-    });
+    };
+
+    // Only add scroller if it's a real Element
+    if (scrollerEl && scrollerEl.nodeType === 1) {
+      stConfig.scroller = scrollerEl;
+    }
+
+    ScrollTrigger.create(stConfig);
   }
-}
 
 ///////////////////////////////
 // TOTAL NUMBER OF CASES TXT //
