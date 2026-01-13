@@ -434,29 +434,64 @@ function initMainMenu() {
   const closeBtn       = document.querySelector('.menu_close');
 
   if (!wrapper || !overlay || !panel || !openBtn || !closeBtn) return;
-  
+
+  // --------------------------------
+  // MOBILE: ALWAYS SHOW SCROLL HAMBURGER
+  // --------------------------------
+  const MOBILE_MQ = window.matchMedia('(max-width: 767px)'); // adjust if your breakpoint differs
+
+  function applyHamburgerMode() {
+    if (!openScrollBtn) return;
+
+    if (MOBILE_MQ.matches) {
+      // Mobile: always visible (no "animate in after scroll")
+      gsap.set(openScrollBtn, {
+        display: 'flex',     // change to 'block' if needed
+        opacity: 1,
+        scale: 1,
+        yPercent: 0,
+        pointerEvents: 'auto',
+        willChange: 'transform, opacity'
+      });
+    } else {
+      // Desktop: your original hidden state (so scroll logic can reveal it)
+      gsap.set(openScrollBtn, {
+        display: 'none',
+        opacity: 0,
+        scale: 0.25,
+        yPercent: 100,
+        pointerEvents: 'auto',
+        willChange: 'transform, opacity'
+      });
+    }
+  }
+
+  // Run once + update on breakpoint/resizes/orientation
+  applyHamburgerMode();
+  MOBILE_MQ.addEventListener?.('change', applyHamburgerMode);
+  window.addEventListener('resize', applyHamburgerMode);
+
   // --------------------------------
   // HOVER SHIMMER
   // --------------------------------
+  if (openScrollBtn) {
+    let hoverTl;
 
-if (openScrollBtn) {
-  let hoverTl;
+    openScrollBtn.addEventListener('mouseenter', () => {
+      // kill any previous shimmer
+      hoverTl?.kill();
 
-  openScrollBtn.addEventListener('mouseenter', () => {
-    // kill any previous shimmer
-    hoverTl?.kill();
-
-    hoverTl = gsap.fromTo(
-      openScrollBtn,
-      { '--shine-x': '-120%' },
-      {
-        '--shine-x': '120%',
-        duration: 0.25,
-        ease: 'power1.out'
-      }
-    );
-  });
-}
+      hoverTl = gsap.fromTo(
+        openScrollBtn,
+        { '--shine-x': '-120%' },
+        {
+          '--shine-x': '120%',
+          duration: 0.25,
+          ease: 'power1.out'
+        }
+      );
+    });
+  }
 
   // --------------------------------
   // INITIAL HARD STATE
@@ -472,15 +507,7 @@ if (openScrollBtn) {
   gsap.set(overlay, { opacity: 0 });
   gsap.set(panel, { xPercent: 100 });
 
-  if (openScrollBtn) {
-    gsap.set(openScrollBtn, {
-      display: 'none',
-      opacity: 0,
-      scale: 0.25,
-      yPercent: 100,
-      willChange: 'transform, opacity'
-    });
-  }
+  // NOTE: openScrollBtn initial state is handled by applyHamburgerMode()
 
   // --------------------------------
   // OPEN TIMELINE (NO TEXT)
@@ -551,6 +578,9 @@ if (openScrollBtn) {
       .add(() => {
         document.body.classList.remove('menu-open');
         smoother?.paused(false);
+
+        // Re-apply correct hamburger state after close (helpful if other logic touched it)
+        applyHamburgerMode();
       });
   }
 
@@ -571,6 +601,7 @@ if (openScrollBtn) {
       closeMenu();
     }
   });
+}
   
   ///////////////////////////////
   // TOTAL NUMBER OF CASES TXT //
