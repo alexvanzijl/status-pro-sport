@@ -1,5 +1,5 @@
 //CORE
-console.log ('CORE LOADED V1.2');
+console.log('CORE LOADED V1.2');
 
 ///////////////////
 // SMOOTH SCROLL //
@@ -7,15 +7,21 @@ console.log ('CORE LOADED V1.2');
 
 let smoother;
 
-window.Webflow ||= [];
+window.Webflow = window.Webflow || [];
 window.Webflow.push(() => {
-  if (smoother) return; // 🔑 prevent double init
+  if (smoother) return; // prevent double init
 
   const wrapper = document.querySelector('.max-width_wrapper');
   const content = document.querySelector('.website');
 
   if (!wrapper || !content) {
     console.warn('ScrollSmoother: wrapper or content missing');
+    return;
+  }
+
+  // Guard: ScrollSmoother must exist
+  if (typeof ScrollSmoother === 'undefined') {
+    console.warn('ScrollSmoother not found (plugin not loaded). Skipping smooth scroll init.');
     return;
   }
 
@@ -36,30 +42,31 @@ window.Webflow.push(() => {
 ///////////////////
 
 function initPageLoader() {
-
   const loader = document.querySelector('.loader_container');
   const logo = document.querySelector('.loader_logo');
 
   if (!loader || !logo) return;
 
+  // Guard dependencies
+  if (typeof gsap === 'undefined' || typeof SplitText === 'undefined') {
+    console.warn('Loader: gsap and/or SplitText missing. Skipping loader animation.');
+    document.documentElement.classList.remove('is-loading');
+    window.dispatchEvent(new Event('loaderComplete'));
+    return;
+  }
+
   // Reset transform only (NO visibility control)
-  gsap.set(loader, {
-    yPercent: 0
-  });
+  gsap.set(loader, { yPercent: 0 });
 
   // Split text
-  const split = new SplitText(logo, {
-    type: 'words'
-  });
-  
+  const split = new SplitText(logo, { type: 'words' });
+
   // Initial state: words below
   gsap.set(logo, { visibility: 'visible' });
   gsap.set(split.words, { y: '2em' });
 
   const tl = gsap.timeline({
-    defaults: {
-      ease: 'power3.out'
-    }
+    defaults: { ease: 'power3.out' }
   });
 
   // IN
@@ -73,7 +80,7 @@ function initPageLoader() {
   // HOLD
   tl.to({}, { duration: 0.25 });
 
-  // 🔑 Reveal page BEFORE loader exits
+  // Reveal page BEFORE loader exits
   tl.add(() => {
     document.documentElement.classList.remove('is-loading');
   });
@@ -87,11 +94,15 @@ function initPageLoader() {
   });
 
   // Loader slides up
-  tl.to(loader, {
-    yPercent: -100,
-    duration: 1,
-    ease: 'power3.in'
-  }, '-=0.5');
+  tl.to(
+    loader,
+    {
+      yPercent: -100,
+      duration: 1,
+      ease: 'power3.in'
+    },
+    '-=0.5'
+  );
 
   // Cleanup + signal (ONCE)
   tl.add(() => {
@@ -116,6 +127,13 @@ function initImageParallax({
   const containers = document.querySelectorAll(containerSelector);
   if (!containers.length) return;
 
+  // Guard: gsap + ScrollTrigger required
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    // Don't hard-fail the whole file; just skip parallax
+    console.warn('Parallax: gsap and/or ScrollTrigger missing. Skipping parallax init.');
+    return;
+  }
+
   containers.forEach(container => {
     const image = container.querySelector(imageSelector);
     if (!image) return;
@@ -136,10 +154,6 @@ function initImageParallax({
     );
   });
 }
-
-window.addEventListener('loaderComplete', () => {
-    initRevealText();
-});
 
 // CASES
 initImageParallax({
@@ -163,7 +177,6 @@ initImageParallax({
 });
 
 // TESTIMONIALS
-
 initImageParallax({
   containerSelector: '.reviews_highlight',
   imageSelector: '.review_bg_img',
@@ -179,10 +192,14 @@ const revealItems = [];
 /**
  * PRIME: split + mask + set initial state
  */
-(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
-.then(() => {
-  document.querySelectorAll('[data-reveal]').forEach(el => {
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => {
+  // Guard: dependencies
+  if (typeof gsap === 'undefined' || typeof SplitText === 'undefined') {
+    console.warn('RevealText: gsap and/or SplitText missing. Skipping reveal text priming.');
+    return;
+  }
 
+  document.querySelectorAll('[data-reveal]').forEach(el => {
     const split = new SplitText(el, {
       type: 'words',
       wordsClass: 'reveal-word'
@@ -211,19 +228,20 @@ const revealItems = [];
   });
 });
 
-
 /**
  * REVEAL: play animation on scroll
  */
 function initRevealText() {
-  revealItems.forEach(({ el, words, stagger, delay }) => {
+  // Guard: ScrollTrigger required
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    console.warn('RevealText: gsap and/or ScrollTrigger missing. Skipping reveal text triggers.');
+    return;
+  }
 
+  revealItems.forEach(({ el, words, stagger, delay }) => {
     const tl = gsap.timeline({
       paused: true,
-      defaults: {
-        duration: 0.9,
-        ease: 'power3.out'
-      }
+      defaults: { duration: 0.9, ease: 'power3.out' }
     });
 
     // Reveal visibility right before animating
@@ -231,34 +249,28 @@ function initRevealText() {
       el.style.setProperty('visibility', 'visible', 'important');
     });
 
-    tl.to(words, {
-      y: 0,
-      stagger,
-      delay
-    });
+    tl.to(words, { y: 0, stagger, delay });
 
-    // ✅ FIXED ScrollTrigger
     ScrollTrigger.create({
       trigger: el,
       start: 'top 80%',
 
       onEnter: self => {
         tl.play();
-        self.kill(); // 🔑 critical
+        self.kill();
       },
 
-      // Handles elements already in view on init / refresh
       onRefresh: self => {
         if (self.progress > 0 && !tl.isActive()) {
           tl.play();
-          self.kill(); // 🔑 critical
+          self.kill();
         }
       }
     });
   });
 }
 
-// Init after loader
+// Init after loader (ONLY once)
 window.addEventListener('loaderComplete', initRevealText);
 
 //////////////////////////
@@ -268,7 +280,7 @@ window.addEventListener('loaderComplete', initRevealText);
 const header = document.querySelector('.header');
 const pusher = document.querySelector('.menu_pusher');
 
-if (header && pusher) {
+if (header && pusher && typeof ResizeObserver !== 'undefined') {
   const ro = new ResizeObserver(entries => {
     for (const entry of entries) {
       pusher.style.height = `${entry.contentRect.height}px`;
@@ -277,34 +289,38 @@ if (header && pusher) {
 
   ro.observe(header);
 }
-  
+
 //////////////////////////////////////////////
 ////////////////// TIMEZONES /////////////////
 //////////////////////////////////////////////
-const $ = window.$;
 
-$(document).ready(function () {
-  // datetime in Amsterdam
-  let amsterdam_datetime_str = new Date().toLocaleString("en-UK", {
-    timeZone: "Europe/Amsterdam",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+// Guard jQuery so it doesn't crash the entire file if $ is missing on some pages.
+const $ = window.jQuery || window.$;
 
-  let jakarta_datetime_str = new Date().toLocaleString("en-UK", {
-    timeZone: "Asia/Jakarta",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+if ($ && typeof $.fn !== 'undefined') {
+  $(document).ready(function () {
+    const amsterdam_datetime_str = new Date().toLocaleString('en-UK', {
+      timeZone: 'Europe/Amsterdam',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
-  // show timestamps
-    const ams = document.getElementById("time_amsterdam");
-    const jkt = document.getElementById("time_jakarta");
+    const jakarta_datetime_str = new Date().toLocaleString('en-UK', {
+      timeZone: 'Asia/Jakarta',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    const ams = document.getElementById('time_amsterdam');
+    const jkt = document.getElementById('time_jakarta');
 
     if (ams) ams.innerHTML = amsterdam_datetime_str;
     if (jkt) jkt.innerHTML = jakarta_datetime_str;
-
-});
+  });
+} else {
+  // Optional: keep this quiet if you want
+  console.warn('jQuery ($) not found. Skipping timezone DOM updates.');
+}
 
 ////////////////////////////
 // SECONDARY BUTTON LOGIC //
@@ -319,6 +335,9 @@ function initSplitHoverText({
   maskClass = 'button_word_mask'
 }) {
   if (!trigger || !textEl || textEl.dataset.split) return;
+
+  // Guard
+  if (typeof gsap === 'undefined' || typeof SplitText === 'undefined') return;
 
   textEl.dataset.split = 'true';
 
@@ -342,15 +361,13 @@ function initSplitHoverText({
     ease: 'power2.in',
     stagger: 0.03
   })
-  .set(split.words, {
-    y: '100%'
-  })
-  .to(split.words, {
-    y: '0%',
-    duration: 0.22,
-    ease: 'power2.out',
-    stagger: 0.03
-  });
+    .set(split.words, { y: '100%' })
+    .to(split.words, {
+      y: '0%',
+      duration: 0.22,
+      ease: 'power2.out',
+      stagger: 0.03
+    });
 
   trigger.addEventListener('mouseenter', () => tl.restart());
 }
@@ -385,41 +402,36 @@ window.addEventListener('DOMContentLoaded', () => {
 // BIO BLOCK //
 ///////////////
 
-ScrollTrigger.matchMedia({
+if (typeof ScrollTrigger !== 'undefined') {
+  ScrollTrigger.matchMedia({
+    "(min-width: 768px)": function () {
+      const detailsBody = document.querySelector('.details_body');
+      const bioBlock = document.querySelector('.bio');
+      const bioGrid = document.querySelector('.details_body_bio');
 
-  // DESKTOP & TABLET
-  "(min-width: 768px)": function () {
+      if (!detailsBody || !bioBlock || !bioGrid) return;
 
-    const detailsBody = document.querySelector('.details_body');
-    const bioBlock    = document.querySelector('.bio');
-    const bioGrid     = document.querySelector('.details_body_bio');
+      ScrollTrigger.create({
+        trigger: detailsBody,
+        start: 'top top+=32',
+        end: () => {
+          const topOffset = 0;
+          const dist = bioGrid.offsetHeight - bioBlock.offsetHeight - topOffset;
+          return `+=${Math.max(0, dist)}`;
+        },
+        pin: bioBlock,
+        pinSpacing: false,
+        anticipatePin: 1
+      });
+    },
 
-    // 🔒 HARD GUARD — prevents ScrollTrigger from even initializing
-    if (!detailsBody || !bioBlock || !bioGrid) return;
-
-    ScrollTrigger.create({
-      trigger: detailsBody,
-      start: 'top top+=32',
-
-      end: () => {
-        const topOffset = 0;
-        const dist = bioGrid.offsetHeight - bioBlock.offsetHeight - topOffset;
-        return `+=${Math.max(0, dist)}`;
-      },
-
-      pin: bioBlock,
-      pinSpacing: false,
-      anticipatePin: 1
-      // markers: true
-    });
-
-  },
-
-  // MOBILE
-  "(max-width: 767px)": function () {
-    // Intentionally empty
-  }
-});
+    "(max-width: 767px)": function () {
+      // Intentionally empty
+    }
+  });
+} else {
+  console.warn('ScrollTrigger not found. Skipping bio pin logic.');
+}
 
 ////////////////////
 // MAIN NAV MENU //
@@ -433,22 +445,24 @@ function initMainMenu() {
   const openScrollBtn  = document.querySelector('.nav_open_scroll');
   const closeBtn       = document.querySelector('.menu_close');
 
-  // If your "regular nav" is not present on mobile, openBtn might not exist.
-  // So we only require wrapper/overlay/panel/closeBtn to run the menu.
+  // Guard
   if (!wrapper || !overlay || !panel || !closeBtn) return;
+  if (typeof gsap === 'undefined') {
+    console.warn('Nav: gsap missing. Skipping nav init.');
+    return;
+  }
 
   // --------------------------------
   // MOBILE: ALWAYS SHOW SCROLL HAMBURGER
   // --------------------------------
-  const MOBILE_MQ = window.matchMedia('(max-width: 767px)'); // adjust breakpoint if needed
+  const MOBILE_MQ = window.matchMedia('(max-width: 767px)');
 
   function applyHamburgerMode() {
     if (!openScrollBtn) return;
 
     if (MOBILE_MQ.matches) {
-      // Mobile: always visible
       gsap.set(openScrollBtn, {
-        display: 'flex', // change to 'inline-flex' if needed
+        display: 'flex',
         opacity: 1,
         scale: 1,
         yPercent: 0,
@@ -456,7 +470,6 @@ function initMainMenu() {
         willChange: 'transform, opacity'
       });
     } else {
-      // Desktop: start hidden (your scroll trigger will reveal it)
       gsap.set(openScrollBtn, {
         display: 'none',
         opacity: 0,
@@ -470,7 +483,6 @@ function initMainMenu() {
 
   applyHamburgerMode();
 
-  // Media query change listener (Safari fallback included)
   if (MOBILE_MQ.addEventListener) {
     MOBILE_MQ.addEventListener('change', applyHamburgerMode);
   } else if (MOBILE_MQ.addListener) {
@@ -491,11 +503,7 @@ function initMainMenu() {
       hoverTl = gsap.fromTo(
         openScrollBtn,
         { '--shine-x': '-120%' },
-        {
-          '--shine-x': '120%',
-          duration: 0.25,
-          ease: 'power1.out'
-        }
+        { '--shine-x': '120%', duration: 0.25, ease: 'power1.out' }
       );
     });
   }
@@ -549,13 +557,11 @@ function initMainMenu() {
   // OPEN / CLOSE
   // --------------------------------
   function openMenu() {
-    // Avoid optional chaining for maximum compatibility
     if (typeof smoother !== 'undefined' && smoother && smoother.paused) {
       smoother.paused(true);
     }
 
     document.body.classList.add('menu-open');
-
     openTl.restart();
     revealMenuText();
   }
@@ -572,7 +578,6 @@ function initMainMenu() {
           smoother.paused(false);
         }
 
-        // Re-apply correct hamburger state after close
         applyHamburgerMode();
       });
   }
@@ -598,13 +603,11 @@ function initMainMenu() {
   //////////////////////////////////////////
   // SCROLL NAV BUTTON (IN + OUT + SHINE) //
   //////////////////////////////////////////
-  // NOTE: This must live INSIDE initMainMenu so it can access openScrollBtn.
 
   if (openScrollBtn && typeof ScrollTrigger !== 'undefined') {
     const showTl = gsap.timeline({ paused: true });
     const hideTl = gsap.timeline({ paused: true });
 
-    // IN
     showTl
       .set(openScrollBtn, { display: 'flex' })
       .to(openScrollBtn, {
@@ -617,15 +620,10 @@ function initMainMenu() {
       .fromTo(
         openScrollBtn,
         { backgroundPosition: '0% 50%' },
-        {
-          backgroundPosition: '200% 50%',
-          duration: 0.45,
-          ease: 'power2.out'
-        },
+        { backgroundPosition: '200% 50%', duration: 0.45, ease: 'power2.out' },
         0.1
       );
 
-    // OUT
     hideTl
       .to(openScrollBtn, {
         opacity: 0,
@@ -636,20 +634,16 @@ function initMainMenu() {
       })
       .set(openScrollBtn, { display: 'none' });
 
-    // Determine scroller without optional chaining
-    let scrollerEl;
-    if (typeof smoother !== 'undefined' && smoother && smoother.wrapper) {
-      scrollerEl = smoother.wrapper;
-    } else {
-      scrollerEl = undefined;
-    }
+    const scrollerEl =
+      typeof smoother !== 'undefined' && smoother && smoother.wrapper
+        ? smoother.wrapper
+        : undefined;
 
     ScrollTrigger.create({
       trigger: document.body,
       scroller: scrollerEl,
       start: 'top -25%',
       onEnter: () => {
-        // If mobile, we never want to hide it anyway—just bail.
         if (MOBILE_MQ.matches) return;
 
         hideTl.kill();
@@ -658,11 +652,7 @@ function initMainMenu() {
         gsap.fromTo(
           openScrollBtn,
           { '--shine-x': '-120%' },
-          {
-            '--shine-x': '120%',
-            duration: 0.65,
-            ease: 'power2.out'
-          }
+          { '--shine-x': '120%', duration: 0.65, ease: 'power2.out' }
         );
       },
       onLeaveBack: () => {
@@ -684,8 +674,6 @@ window.Webflow.push(() => {
   const cases = document.querySelectorAll('.cases_card');
   const total = cases.length;
 
-  // console.log('Total cases:', total);
-
   cases.forEach((card, i) => {
     const indexEl = card.querySelector('.case_index');
     if (!indexEl) return;
@@ -706,130 +694,85 @@ window.Webflow = window.Webflow || [];
 window.Webflow.push(() => {
   initMainMenu();
 });
-  
+
 //////////////////////////////////////////////
 //////////////////// CARDS ///////////////////
 //////////////////////////////////////////////
 
-// new SplitType(".card_highlights_txt_preview", {
-//   types: "lines, words",
-//   tagName: "span"
-// });
+const newsItems = document.querySelectorAll('.card_highlights_item');
 
-// $(".card_highlights_txt_preview .line").wrap("<div class='line_mask'></div>");
-// $(".tag.details").wrap("<div class='line_mask'></div>");
+newsItems.forEach(item => {
+  // Guard: gsap required for animations
+  if (typeof gsap === 'undefined') return;
 
-const newsItems = document.querySelectorAll(".card_highlights_item");
+  const newsText = item.querySelectorAll('.card_highlights_txt_preview');
+  const newsTag = item.querySelector('.tag.details');
+  const newsArrow = item.querySelector('.card_highlights_arrow');
+  const newsOverlay = item.querySelector('.card_highlights_overlay');
+  const newsLogo = item.querySelector('.card_logo');
 
-newsItems.forEach((item) => {
-  const newsText = item.querySelectorAll(".card_highlights_txt_preview");
-  const newsTag = item.querySelector(".tag.details");
-  const newsArrow = item.querySelector(".card_highlights_arrow");
-  const newsOverlay = item.querySelector(".card_highlights_overlay");
-  const newsLogo = item.querySelector(".card_logo");
-  
-  if (
-  !newsText.length &&
-  !newsTag &&
-  !newsArrow &&
-  !newsOverlay &&
-  !newsLogo
-) return;
+  if (!newsText.length && !newsTag && !newsArrow && !newsOverlay && !newsLogo) return;
 
-  const tl_news_preview = gsap.timeline({
-    paused: true
-  });
+  const tl_news_preview = gsap.timeline({ paused: true });
 
   tl_news_preview.to(newsText, {
-    translateY: "100%",
-    opacity: "0",
+    translateY: '100%',
+    opacity: '0',
     stagger: { each: 0 },
-    ease: "circ.in",
+    ease: 'circ.in',
     delay: 0,
     duration: 0.3
   });
 
-  tl_news_preview.to(
-    newsArrow,
-    {
-      opacity: "0",
-      duration: 0.3
-    },
-    0
-  );
+  tl_news_preview.to(newsArrow, { opacity: '0', duration: 0.3 }, 0);
+  tl_news_preview.to(newsOverlay, { opacity: '0', duration: 0.3 }, 0);
+  tl_news_preview.to(newsLogo, { opacity: '0', duration: 0.3 }, 0);
+  tl_news_preview.to('.transition_overlay', { opacity: '1', duration: 0.3 }, 0);
 
-  tl_news_preview.to(
-    newsOverlay,
-    {
-      opacity: "0",
-      duration: 0.3
-    },
-    0
-  );
-
-  tl_news_preview.to(
-    newsLogo,
-    {
-      opacity: "0",
-      duration: 0.3
-    },
-    0
-  );
-
-  tl_news_preview.to(
-    ".transition_overlay",
-    {
-      opacity: "1",
-      duration: 0.3
-    },
-    0
-  );
-
-  // Disable hover fx, add again later
-  tl_news_preview.to(
-    ".card_highlights_item",
-    {
-      pointerEvents: "none",
-      duration: 0
-    },
-    0
-  );
+  tl_news_preview.to('.card_highlights_item', { pointerEvents: 'none', duration: 0 }, 0);
 
   tl_news_preview.to(
     newsTag,
     {
-      translateY: "100%",
-      opacity: "0",
-      ease: "circ.in",
+      translateY: '100%',
+      opacity: '0',
+      ease: 'circ.in',
       delay: 0,
       duration: 0.3
     },
     0
   );
 
-  item.addEventListener("click", newsTransition);
+  item.addEventListener('click', newsTransition);
 
   function newsTransition() {
-    //console.log("flip");
-    const state = Flip.getState(".card_highlights_item");
+    // Guard Flip
+    if (typeof Flip === 'undefined') {
+      console.warn('Flip plugin not found. Skipping Flip animation.');
+      tl_news_preview.resume();
+      item.classList.toggle('active');
+      return;
+    }
+
+    const state = Flip.getState('.card_highlights_item');
 
     tl_news_preview.resume();
-    $(this).toggleClass("active");
+    item.classList.toggle('active');
 
     Flip.from(state, {
       duration: 0.5,
-      ease: "circ.inOut",
+      ease: 'circ.inOut',
       delay: 0.5
     });
   }
 });
-  
+
 //////////////////////////////////////////////
 /////////////// WINDOWS STYLING //////////////
-//////////////////////////////////////////////  
+//////////////////////////////////////////////
 
-  document.addEventListener("DOMContentLoaded", function() {
-    if (navigator.userAgent.indexOf('Windows') !== -1) {
-      document.documentElement.classList.add('windows');
-    }
-  });
+document.addEventListener('DOMContentLoaded', function () {
+  if (navigator.userAgent.indexOf('Windows') !== -1) {
+    document.documentElement.classList.add('windows');
+  }
+});
