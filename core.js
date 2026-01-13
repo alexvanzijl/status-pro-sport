@@ -676,32 +676,31 @@ window.Webflow.push(() => {
       })
       .set(openScrollBtn, { display: 'none' });
 
-    ScrollTrigger.create({
-      trigger: document.body,
-      scroller: smoother?.wrapper || undefined,
-      start: 'top -25%',
-      onEnter: () => {
-        hideTl.kill();
-        showTl.restart();
-        // Shine sweep (runs once when revealed)
-        gsap.fromTo(
-        openScrollBtn,
-        { '--shine-x': '-120%' },
-        {
-            '--shine-x': '120%',
-            duration: 0.65,
-            ease: 'power2.out'
-        }
-);
+ScrollTrigger.create({
+  trigger: document.body,
+  scroller: (typeof smoother !== "undefined" && smoother?.wrapper) ? smoother.wrapper : undefined,
+  start: 'top -25%',
+  onEnter: () => {
+    hideTl.kill();
+    showTl.restart();
 
-      },
-      onLeaveBack: () => {
-        showTl.kill();
-        hideTl.restart();
+    // Shine sweep (runs once when revealed)
+    gsap.fromTo(
+      openScrollBtn,
+      { '--shine-x': '-120%' },
+      {
+        '--shine-x': '120%',
+        duration: 0.65,
+        ease: 'power2.out'
       }
-    });
+    );
+  },
+  onLeaveBack: () => {
+    showTl.kill();
+    hideTl.restart();
   }
-}
+});
+
 
 // INIT
 window.addEventListener('DOMContentLoaded', initMainMenu);
