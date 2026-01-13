@@ -433,12 +433,14 @@ function initMainMenu() {
   const openScrollBtn  = document.querySelector('.nav_open_scroll');
   const closeBtn       = document.querySelector('.menu_close');
 
-  if (!wrapper || !overlay || !panel || !openBtn || !closeBtn) return;
+  // If your "regular nav" is not present on mobile, openBtn might not exist.
+  // So we only require wrapper/overlay/panel/closeBtn to run the menu.
+  if (!wrapper || !overlay || !panel || !closeBtn) return;
 
   // --------------------------------
   // MOBILE: ALWAYS SHOW SCROLL HAMBURGER
   // --------------------------------
-  const MOBILE_MQ = window.matchMedia('(max-width: 767px)'); // adjust if needed
+  const MOBILE_MQ = window.matchMedia('(max-width: 767px)'); // adjust breakpoint if needed
 
   function applyHamburgerMode() {
     if (!openScrollBtn) return;
@@ -446,7 +448,7 @@ function initMainMenu() {
     if (MOBILE_MQ.matches) {
       // Mobile: always visible
       gsap.set(openScrollBtn, {
-        display: 'flex',     // or 'inline-flex'
+        display: 'flex', // change to 'inline-flex' if needed
         opacity: 1,
         scale: 1,
         yPercent: 0,
@@ -454,7 +456,7 @@ function initMainMenu() {
         willChange: 'transform, opacity'
       });
     } else {
-      // Desktop: hidden until scroll logic reveals it
+      // Desktop: start hidden (your scroll trigger will reveal it)
       gsap.set(openScrollBtn, {
         display: 'none',
         opacity: 0,
@@ -466,14 +468,12 @@ function initMainMenu() {
     }
   }
 
-  // Run once
   applyHamburgerMode();
 
-  // Listen for breakpoint changes safely
+  // Media query change listener (Safari fallback included)
   if (MOBILE_MQ.addEventListener) {
     MOBILE_MQ.addEventListener('change', applyHamburgerMode);
-  } else {
-    // Safari <14 fallback
+  } else if (MOBILE_MQ.addListener) {
     MOBILE_MQ.addListener(applyHamburgerMode);
   }
 
@@ -524,24 +524,14 @@ function initMainMenu() {
 
   openTl
     .set(wrapper, { display: 'flex' })
-    .to(overlay, {
-      opacity: 0.7,
-      duration: 0.3
-    }, 0)
-    .to(panel, {
-      xPercent: 0,
-      duration: 0.6,
-      ease: 'power4.out'
-    }, 0);
+    .to(overlay, { opacity: 0.7, duration: 0.3 }, 0)
+    .to(panel, { xPercent: 0, duration: 0.6, ease: 'power4.out' }, 0);
 
   // --------------------------------
   // TEXT REVEAL
   // --------------------------------
   function revealMenuText() {
-    const words = panel.querySelectorAll(
-      '[data-reveal] .reveal-word > span'
-    );
-
+    const words = panel.querySelectorAll('[data-reveal] .reveal-word > span');
     if (!words.length) return;
 
     gsap.set(words, { yPercent: 140 });
@@ -559,7 +549,11 @@ function initMainMenu() {
   // OPEN / CLOSE
   // --------------------------------
   function openMenu() {
-    if (typeof smoother !== 'undefined') smoother.paused(true);
+    // Avoid optional chaining for maximum compatibility
+    if (typeof smoother !== 'undefined' && smoother && smoother.paused) {
+      smoother.paused(true);
+    }
+
     document.body.classList.add('menu-open');
 
     openTl.restart();
@@ -567,24 +561,18 @@ function initMainMenu() {
   }
 
   function closeMenu() {
-    gsap.timeline({
-      defaults: { ease: 'power2.in' }
-    })
-      .to(panel, {
-        xPercent: 100,
-        duration: 0.4,
-        ease: 'power3.in'
-      }, 0)
-      .to(overlay, {
-        opacity: 0,
-        duration: 0.25
-      }, 0.1)
+    gsap.timeline({ defaults: { ease: 'power2.in' } })
+      .to(panel, { xPercent: 100, duration: 0.4, ease: 'power3.in' }, 0)
+      .to(overlay, { opacity: 0, duration: 0.25 }, 0.1)
       .set(wrapper, { display: 'none' })
       .add(() => {
         document.body.classList.remove('menu-open');
-        if (typeof smoother !== 'undefined') smoother.paused(false);
 
-        // Ensure correct hamburger state after close
+        if (typeof smoother !== 'undefined' && smoother && smoother.paused) {
+          smoother.paused(false);
+        }
+
+        // Re-apply correct hamburger state after close
         applyHamburgerMode();
       });
   }
@@ -592,7 +580,7 @@ function initMainMenu() {
   // --------------------------------
   // CLICK TRIGGERS
   // --------------------------------
-  openBtn.addEventListener('click', openMenu);
+  if (openBtn) openBtn.addEventListener('click', openMenu);
   if (openScrollBtn) openScrollBtn.addEventListener('click', openMenu);
 
   closeBtn.addEventListener('click', closeMenu);
@@ -606,40 +594,13 @@ function initMainMenu() {
       closeMenu();
     }
   });
-}
-  
-  ///////////////////////////////
-  // TOTAL NUMBER OF CASES TXT //
-  ///////////////////////////////
-  
-window.Webflow ||= [];
-window.Webflow.push(() => {
-  const cases = document.querySelectorAll('.cases_card');
-  const total = cases.length;
-
-  console.log('Total cases:', total);
-
-  cases.forEach((card, i) => {
-    const indexEl = card.querySelector('.case_index');
-
-    //console.log('Card:', card);
-    //console.log('Index element:', indexEl);
-
-    if (!indexEl) return;
-
-    const current = String(i + 1).padStart(2, '0');
-    const totalFormatted = String(total).padStart(2, '0');
-
-    indexEl.setAttribute('data-index', current);
-    indexEl.setAttribute('data-total', totalFormatted);
-  });
-});
 
   //////////////////////////////////////////
   // SCROLL NAV BUTTON (IN + OUT + SHINE) //
   //////////////////////////////////////////
+  // NOTE: This must live INSIDE initMainMenu so it can access openScrollBtn.
 
-  if (openScrollBtn) {
+  if (openScrollBtn && typeof ScrollTrigger !== 'undefined') {
     const showTl = gsap.timeline({ paused: true });
     const hideTl = gsap.timeline({ paused: true });
 
@@ -653,7 +614,6 @@ window.Webflow.push(() => {
         duration: 0.4,
         ease: 'back.out(2.4)'
       })
-      // subtle shine sweep
       .fromTo(
         openScrollBtn,
         { backgroundPosition: '0% 50%' },
@@ -676,67 +636,76 @@ window.Webflow.push(() => {
       })
       .set(openScrollBtn, { display: 'none' });
 
-ScrollTrigger.create({
-  trigger: document.body,
-  scroller: (typeof smoother !== "undefined" && smoother?.wrapper) ? smoother.wrapper : undefined,
-  start: 'top -25%',
-  onEnter: () => {
-    hideTl.kill();
-    showTl.restart();
+    // Determine scroller without optional chaining
+    let scrollerEl;
+    if (typeof smoother !== 'undefined' && smoother && smoother.wrapper) {
+      scrollerEl = smoother.wrapper;
+    } else {
+      scrollerEl = undefined;
+    }
 
-    // Shine sweep (runs once when revealed)
-    gsap.fromTo(
-      openScrollBtn,
-      { '--shine-x': '-120%' },
-      {
-        '--shine-x': '120%',
-        duration: 0.65,
-        ease: 'power2.out'
+    ScrollTrigger.create({
+      trigger: document.body,
+      scroller: scrollerEl,
+      start: 'top -25%',
+      onEnter: () => {
+        // If mobile, we never want to hide it anyway—just bail.
+        if (MOBILE_MQ.matches) return;
+
+        hideTl.kill();
+        showTl.restart();
+
+        gsap.fromTo(
+          openScrollBtn,
+          { '--shine-x': '-120%' },
+          {
+            '--shine-x': '120%',
+            duration: 0.65,
+            ease: 'power2.out'
+          }
+        );
+      },
+      onLeaveBack: () => {
+        if (MOBILE_MQ.matches) return;
+
+        showTl.kill();
+        hideTl.restart();
       }
-    );
-  },
-  onLeaveBack: () => {
-    showTl.kill();
-    hideTl.restart();
+    });
   }
+}
+
+///////////////////////////////
+// TOTAL NUMBER OF CASES TXT //
+///////////////////////////////
+
+window.Webflow = window.Webflow || [];
+window.Webflow.push(() => {
+  const cases = document.querySelectorAll('.cases_card');
+  const total = cases.length;
+
+  // console.log('Total cases:', total);
+
+  cases.forEach((card, i) => {
+    const indexEl = card.querySelector('.case_index');
+    if (!indexEl) return;
+
+    const current = String(i + 1).padStart(2, '0');
+    const totalFormatted = String(total).padStart(2, '0');
+
+    indexEl.setAttribute('data-index', current);
+    indexEl.setAttribute('data-total', totalFormatted);
+  });
 });
 
-
+///////////////////////////////
 // INIT
-window.addEventListener('DOMContentLoaded', initMainMenu);
+///////////////////////////////
 
-//////////////////////////////////////////////
-//////////////// REFRESH FIXES ///////////////
-//////////////////////////////////////////////
-
-//let isResizing = false;
-//let isScrolling = false;
-//let debounceTimeout;
-
-//$(window).on('resize', function() {
-//  if (!isResizing) {
-//    isResizing = true;
-//    clearTimeout(debounceTimeout);
-//    debounceTimeout = setTimeout(function() {
-      //console.log('Window resized');
-//      if (!isScrolling) {
-//        location.reload();
-//      }
-//      isResizing = false;
-//    }, 250);
-//  }
-//});
-
-//$(window).on('scroll', function() {
-//  if (!isScrolling) {
-//    isScrolling = true;
-//    clearTimeout(debounceTimeout);
-//    debounceTimeout = setTimeout(function() {
-      //console.log('Scroll stopped');
-//      isScrolling = false;
-//    }, 250);
-//  }
-//});
+window.Webflow = window.Webflow || [];
+window.Webflow.push(() => {
+  initMainMenu();
+});
   
 //////////////////////////////////////////////
 //////////////////// CARDS ///////////////////
