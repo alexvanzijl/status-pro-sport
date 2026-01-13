@@ -600,7 +600,7 @@ function initMainMenu() {
     }
   });
 
-    //////////////////////////////////////////
+  //////////////////////////////////////////
   // SCROLL NAV BUTTON (IN + OUT + SHINE) //
   //////////////////////////////////////////
 
@@ -644,12 +644,9 @@ function initMainMenu() {
     let scrollerEl = null;
 
     if (typeof smoother !== 'undefined' && smoother) {
-      // wrapper() method (most common)
       if (typeof smoother.wrapper === 'function') {
         scrollerEl = smoother.wrapper();
-      }
-      // wrapper element property (less common, but handle it)
-      else if (smoother.wrapper && smoother.wrapper.nodeType === 1) {
+      } else if (smoother.wrapper && smoother.wrapper.nodeType === 1) {
         scrollerEl = smoother.wrapper;
       }
     }
@@ -689,6 +686,8 @@ function initMainMenu() {
 
     ScrollTrigger.create(stConfig);
   }
+} // ✅ FIX: closes initMainMenu()
+
 
 ///////////////////////////////
 // TOTAL NUMBER OF CASES TXT //
