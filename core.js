@@ -438,15 +438,15 @@ function initMainMenu() {
   // --------------------------------
   // MOBILE: ALWAYS SHOW SCROLL HAMBURGER
   // --------------------------------
-  const MOBILE_MQ = window.matchMedia('(max-width: 767px)'); // adjust if your breakpoint differs
+  const MOBILE_MQ = window.matchMedia('(max-width: 767px)'); // adjust if needed
 
   function applyHamburgerMode() {
     if (!openScrollBtn) return;
 
     if (MOBILE_MQ.matches) {
-      // Mobile: always visible (no "animate in after scroll")
+      // Mobile: always visible
       gsap.set(openScrollBtn, {
-        display: 'flex',     // change to 'block' if needed
+        display: 'flex',     // or 'inline-flex'
         opacity: 1,
         scale: 1,
         yPercent: 0,
@@ -454,7 +454,7 @@ function initMainMenu() {
         willChange: 'transform, opacity'
       });
     } else {
-      // Desktop: your original hidden state (so scroll logic can reveal it)
+      // Desktop: hidden until scroll logic reveals it
       gsap.set(openScrollBtn, {
         display: 'none',
         opacity: 0,
@@ -466,9 +466,17 @@ function initMainMenu() {
     }
   }
 
-  // Run once + update on breakpoint/resizes/orientation
+  // Run once
   applyHamburgerMode();
-  MOBILE_MQ.addEventListener?.('change', applyHamburgerMode);
+
+  // Listen for breakpoint changes safely
+  if (MOBILE_MQ.addEventListener) {
+    MOBILE_MQ.addEventListener('change', applyHamburgerMode);
+  } else {
+    // Safari <14 fallback
+    MOBILE_MQ.addListener(applyHamburgerMode);
+  }
+
   window.addEventListener('resize', applyHamburgerMode);
 
   // --------------------------------
@@ -478,8 +486,7 @@ function initMainMenu() {
     let hoverTl;
 
     openScrollBtn.addEventListener('mouseenter', () => {
-      // kill any previous shimmer
-      hoverTl?.kill();
+      if (hoverTl) hoverTl.kill();
 
       hoverTl = gsap.fromTo(
         openScrollBtn,
@@ -506,8 +513,6 @@ function initMainMenu() {
 
   gsap.set(overlay, { opacity: 0 });
   gsap.set(panel, { xPercent: 100 });
-
-  // NOTE: openScrollBtn initial state is handled by applyHamburgerMode()
 
   // --------------------------------
   // OPEN TIMELINE (NO TEXT)
@@ -554,7 +559,7 @@ function initMainMenu() {
   // OPEN / CLOSE
   // --------------------------------
   function openMenu() {
-    smoother?.paused(true);
+    if (typeof smoother !== 'undefined') smoother.paused(true);
     document.body.classList.add('menu-open');
 
     openTl.restart();
@@ -577,9 +582,9 @@ function initMainMenu() {
       .set(wrapper, { display: 'none' })
       .add(() => {
         document.body.classList.remove('menu-open');
-        smoother?.paused(false);
+        if (typeof smoother !== 'undefined') smoother.paused(false);
 
-        // Re-apply correct hamburger state after close (helpful if other logic touched it)
+        // Ensure correct hamburger state after close
         applyHamburgerMode();
       });
   }
@@ -588,7 +593,7 @@ function initMainMenu() {
   // CLICK TRIGGERS
   // --------------------------------
   openBtn.addEventListener('click', openMenu);
-  openScrollBtn?.addEventListener('click', openMenu);
+  if (openScrollBtn) openScrollBtn.addEventListener('click', openMenu);
 
   closeBtn.addEventListener('click', closeMenu);
   overlay.addEventListener('click', closeMenu);
