@@ -12,6 +12,13 @@ initImageParallax({
   yPercent: 10
 });
 
+// SERVICES
+initImageParallax({
+  containerSelector: '.studio_item',
+  imageSelector: '.review_bg_img',
+  yPercent: 10
+});
+
 // CALL OUT
 initImageParallax({
   containerSelector: '.call-out_visual',
