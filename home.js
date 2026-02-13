@@ -120,53 +120,55 @@ function createCaseViewer(config) {
   }
 
   function activateSlide(index) {
-    slides.forEach(slide => slide.classList.remove('is-active'));
-    slides[index].classList.add('is-active');
-    updateContent();
-  }
+  currentIndex = index; // ✅ move index first
+
+  slides.forEach(slide => slide.classList.remove('is-active'));
+  slides[index].classList.add('is-active');
+
+  updateContent(); // now reads the correct slide
+}
 
   function nextIndex() {
     return (currentIndex + 1) % slides.length;
   }
 
   function runCycle() {
-    const next = nextIndex();
+  const next = nextIndex();
 
-    timeline = gsap.timeline({
-      onComplete: () => {
-        currentIndex = next;
-        runCycle();
-      }
-    });
+  timeline = gsap.timeline({
+    onComplete: () => {
+      runCycle();
+    }
+  });
 
-    timeline.set(progressBar, { width: '0%' });
+  timeline.set(progressBar, { width: '0%' });
 
-    timeline.to(progressBar, {
-      width: '100%',
-      duration: config.duration || 8,
-      ease: 'linear'
-    });
+  timeline.to(progressBar, {
+    width: '100%',
+    duration: config.duration || 8,
+    ease: 'linear'
+  });
 
-    timeline.to(progressBar, {
-      width: '0%',
-      duration: 1,
-      ease: 'power3.out'
-    }, '+=0.1');
+  timeline.to(progressBar, {
+    width: '0%',
+    duration: 1,
+    ease: 'power3.out'
+  }, '+=0.1');
 
-    timeline.to(slides[currentIndex], {
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.inOut'
-    });
+  timeline.to(slides[currentIndex], {
+    opacity: 0,
+    duration: 0.6,
+    ease: 'power2.inOut'
+  });
 
-    timeline.call(() => activateSlide(next));
+  timeline.call(() => activateSlide(next)); // ✅ this now updates currentIndex
 
-    timeline.fromTo(
-      slides[next],
-      { opacity: 0, scale: 1.2 },
-      { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' }
-    );
-  }
+  timeline.fromTo(
+    slides[next],
+    { opacity: 0, scale: 1.2 },
+    { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' }
+  );
+}
 
   // Init
   slides[0].classList.add('is-active');
