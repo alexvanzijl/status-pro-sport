@@ -49,12 +49,12 @@ function initPageLoader() {
 
   // Split text
   const split = new SplitText(logo, {
-    type: 'words'
+    type: 'lines'
   });
   
-  // Initial state: words below
+  // Initial state: lines below
   gsap.set(logo, { visibility: 'visible' });
-  gsap.set(split.words, { y: '2em' });
+  gsap.set(split.lines, { y: '2em' });
 
   const tl = gsap.timeline({
     defaults: {
@@ -63,7 +63,7 @@ function initPageLoader() {
   });
 
   // IN
-  tl.to(split.words, {
+  tl.to(split.lines, {
     y: 0,
     duration: 1,
     stagger: 0.15,
@@ -78,8 +78,8 @@ function initPageLoader() {
     document.documentElement.classList.remove('is-loading');
   });
 
-  // OUT (words go up)
-  tl.to(split.words, {
+  // OUT (lines go up)
+  tl.to(split.lines, {
     y: '-2em',
     duration: 0.5,
     stagger: 0.15,
